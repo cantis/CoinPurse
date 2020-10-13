@@ -139,3 +139,4 @@ cython_debug/
 
 # Sqlite Database
 .sqlite
+.db
