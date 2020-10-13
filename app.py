@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import InputRequired
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 
@@ -19,6 +20,9 @@ db = SQLAlchemy(app)
 #   >>>from app import db
 #   >>>db.create_all()
 #   >>>quit()
+
+bs = Bootstrap()
+bs.init_app(app)
 
 
 class Entry(db.Model):
@@ -61,6 +65,9 @@ def index():
 
 @app.route('/add', methods=['post'])
 def add_transaction():
+
+    
+
     name = request.form.get('name')
     role = request.form.get('role')
     salary = request.form.get('salary')

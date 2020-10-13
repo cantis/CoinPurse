@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+  
+{% block title %}
+  Coin Purse
+{% endblock title %}  
+
+{% block navbar %}
+  {% include "layout/navbar.html" %}
+{% endblock navbar %} 
+
+{% block body_attribs %}
+  d-flex flex-column min-vh-100
+{% endblock body_attribs%}
+
+{% block body %}
+  {{ super() }} 
+  {% include "layout/footer.html" %}
+{% endblock body %}
