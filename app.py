@@ -58,6 +58,8 @@ table = TransactionsTable(transactions)
 
 @app.route('/', methods=['get'])
 def index():
+    entries = Entry.query.all()
+    table = TransactionsTable(entries)
     return render_template('index.html', table=table)
 
 
