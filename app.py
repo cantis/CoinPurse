@@ -38,7 +38,7 @@ class TransactionsTable(Table):
     classes = ['table']
     table_id = 'tranTable'
     thead_classes = ['table__header']
-    no_items = 'empty'
+    no_items = 'No Transactions Recorded'
 
     def get_tr_attrs(self, item):
         return{'class': 'table__row'}
