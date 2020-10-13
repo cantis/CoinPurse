@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect
 from flask.globals import request
 from config import DevConfig
 from flask_table import Table, Col
@@ -69,8 +69,5 @@ def add_transaction():
     new_entry = Entry(name=name, role=role, salary=salary)
     db.session.add(new_entry)
     db.session.commit()
-    transactions.append(Transaction(name, role, salary))
 
-    table = TransactionsTable(transactions)
-
-    return render_template('index.html', table=table)
+    return redirect(url_for('index'))
