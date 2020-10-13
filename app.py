@@ -1,8 +1,12 @@
 from flask import Flask, render_template, url_for, redirect
 from flask.globals import request
+from wtforms.fields.simple import HiddenField
 from config import DevConfig
 from flask_table import Table, Col
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import InputRequired
 
 app = Flask(__name__)
 
@@ -18,6 +22,7 @@ db = SQLAlchemy(app)
 
 
 class Entry(db.Model):
+    """ db table for coin purse entries """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     role = db.Column(db.String(25), nullable=False)
@@ -25,6 +30,7 @@ class Entry(db.Model):
 
 
 class TransactionsTable(Table):
+    """ Defines an flask_table for HTML Render """
     classes = ['table']
     table_id = 'tranTable'
     thead_classes = ['table__header']
@@ -37,11 +43,20 @@ class TransactionsTable(Table):
     salary = Col('Salary', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table_cell'})
 
 
+class AddEntryForm(FlaskForm):
+    """ Add Entry Form """
+    id = HiddenField()
+    name = StringField(label='Name', validators=[InputRequired('Please provide a name')])
+    role = StringField(label='Role', validators=[InputRequired('Please provide a role')])
+    salary = StringField(label='Salary', validators=[InputRequired('Please provide a salary')])
+
+
 @app.route('/', methods=['get'])
 def index():
     entries = Entry.query.all()
     table = TransactionsTable(entries)
-    return render_template('index.html', table=table)
+    add_form = AddEntryForm()
+    return render_template('index.html', table=table, add_form=add_form)
 
 
 @app.route('/add', methods=['post'])

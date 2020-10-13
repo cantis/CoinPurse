@@ -7,7 +7,7 @@ basedir = path.abspath(path.dirname(__file__))
 
 class BaseConfig(object):
     FLASK_APP = 'wsgi.py'
-    SECRET_KEY = environ.get('SECRET_KEY')
+    SECRET_KEY = 'super_secret_key'
 
     STATIC_FOLDER = 'static'
     TEMPLATE_FOLDER = 'templates'
