@@ -1,8 +1,9 @@
 from os import environ, path
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
+# load_dotenv(path.join(basedir, '.env'))
+
 
 class BaseConfig(object):
     FLASK_APP = 'wsgi.py'
@@ -19,6 +20,7 @@ class BaseConfig(object):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 class ProdConfig(BaseConfig):
     ENV = 'production'
     FLASK_ENV = 'production'
@@ -32,7 +34,7 @@ class DevConfig(BaseConfig):
     FLASK_DEBUG = True
     TESTING = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = environ.get('DEV_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///wallet.db'
 
 
 class TestConfig(BaseConfig):
