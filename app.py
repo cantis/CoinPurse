@@ -65,14 +65,15 @@ def index():
 
 @app.route('/add', methods=['post'])
 def add_transaction():
-
-    
-
-    name = request.form.get('name')
-    role = request.form.get('role')
-    salary = request.form.get('salary')
-    new_entry = Entry(name=name, role=role, salary=salary)
-    db.session.add(new_entry)
-    db.session.commit()
+    """ Handle adding a new transaction """
+    form = AddEntryForm()
+    if form.validate_on_submit():
+        new_entry = Entry(
+            name=request.form.get('name'),
+            role=request.form.get('role'),
+            salary=request.form.get('salary')
+            )
+        db.session.add(new_entry)
+        db.session.commit()
 
     return redirect(url_for('index'))
