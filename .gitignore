@@ -140,3 +140,4 @@ cython_debug/
 # Sqlite Database
 .sqlite
 .db
+wallet.db
