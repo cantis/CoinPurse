@@ -1,5 +1,4 @@
 from flask import Flask, render_template, url_for, redirect
-from flask.globals import request
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
@@ -80,25 +79,37 @@ class CharacterTable(Table):
     classes = ['table']
     table_id = 'characterTable'
     thead_classes = ['table__header']
-    no_items = 'No Characters'
+    no_items = 'No Character Defined'
 
     def get_tr_attrs(self, item):
         return{'class': 'table__row'}
     name = Col('Character', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-    is_dead = Col
+    is_dead = Col('Is Dead', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
 
 
 # Quick Forms
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
+    session = IntegerField(label='Session', validators=[InputRequired('Please provide session number.')])
+    description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
+    amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+
+
+class EditEntryForm(FlaskForm):
     id = HiddenField()
     session = IntegerField(label='Session', validators=[InputRequired('Please provide session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
-    amoutn = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
 
 
 class AddCharacterForm(FlaskForm):
     """ Add Character Form """
+    name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
+    is_dead = BooleanField(label="Is Dead")
+
+
+class EditCharacterForm(FlaskForm):
+    """ Edit Character Form """
     id = HiddenField()
     name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
     is_dead = BooleanField(label="Is Dead")
@@ -108,9 +119,8 @@ class AddCharacterForm(FlaskForm):
 @app.route('/', methods=['get'])
 def index():
     entries = Entry.query.all()
-    table = EntriesTable(entries)
     add_form = AddEntryForm()
-    return render_template('index.html', table=table, add_form=add_form)
+    return render_template('index.html', entries=entries, add_form=add_form)
 
 
 @app.route('/add', methods=['post'])
@@ -119,9 +129,10 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
         new_entry = Entry(
-            name=request.form.get('name'),
-            role=request.form.get('role'),
-            salary=request.form.get('salary')
+            id=form.id.data,
+            session=form.session.data,
+            description=form.description.data,
+            amount=form.amount.data
             )
         db.session.add(new_entry)
         db.session.commit()
@@ -143,8 +154,8 @@ def add_character():
     form = AddCharacterForm()
     if form.validate_on_submit():
         new_character = Character(
-            name=request.form.get('name'),
-            is_dead=request.form.get('is_dead')
+            name=form.name.data,
+            is_dead=form.is_dead.data
             )
         db.session.add(new_character)
         db.session.commit()
