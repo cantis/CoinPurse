@@ -12,6 +12,7 @@
             <h2 class="page-header">Characters</h2>
         </div>
         <br>
+        <!-- Character List  -->
         <div class="row col-md-offset-1 col-md-8">
             <table class="table" id="characterTable">
                 <thead>
@@ -31,23 +32,39 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="character/{{ character.id}}" class="link" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="/character/{{ character.id}}" class="link" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        <!-- Add Form  -->
+        {% if mode == 'add' %}
         <div class="row col-md-offset-1 col-md-6">
             <h2>Add Character</h2>
             <form action="/character/add" method="post">
                 <dl>
-                    {{ wtf.quick_form(add_character_form) }}
+                    {{ wtf.quick_form(form) }}
                     <a href="/character/add" class="btn btn-secondary" role="button" areia-disabled="true">Cancel</a>
                     <input type="submit" value="Add Character" class="btn btn-primary">
                 </dl>
             </form>
         </div>
+        {% endif %}
+        <!-- Edit Form  -->
+        {% if mode == 'edit' %}
+        <div class="row col-md-offset-1 col-md-6">
+            <h2>Edit Character</h2>
+            <form action="/character/{{character.id}}" method="post">
+                <dl>
+                    {{ wtf.quick_form(form) }}
+                    <a href="/character/add" class="btn btn-secondary" role="button" areia-disabled="true">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-primary">
+                </dl>
+            </form>
+        </div>
+        {% endif %}
     </div>
 {% endblock content %}
 
@@ -57,7 +74,10 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready (function(){
-            $('#characterTable').DataTable();
+            $('#characterTable').DataTable({
+                paging:false,
+                scrollY: 185
+            });
         })
     </script>
 {% endblock scripts%}

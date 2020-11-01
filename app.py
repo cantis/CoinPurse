@@ -113,8 +113,37 @@ def add_transaction():
 @app.route('/character', methods=['get'])
 def character_list():
     characters = Character.query.all()
-    add_character_form = AddCharacterForm()
-    return render_template('character.html', characters=characters, add_character_form=add_character_form)
+    form = AddCharacterForm()
+    form.process(obj=characters)
+    return render_template('character.html', characters=characters, form=form, mode='add')
+
+
+@app.route('/character/<id>', methods=['get', 'post'])
+def edit_character(id):
+    """ Handle editing an existing Character """
+    
+    # The single character we are editing
+    character = Character.query.get(id)
+    # Data for the list of characters
+    characters = Character.query.all()
+
+    form = EditCharacterForm()
+    mode = ''
+
+    if form.validate_on_submit():
+        character.id = int(form.id.data)
+        character.name = form.name.data
+        character.is_dead = form.is_dead.data
+        db.session.commit()
+        form = AddCharacterForm()
+        character = None
+        mode = 'add'
+    else:
+        mode = 'edit'
+
+    form.process(obj=characters)
+    form.process(obj=character)
+    return render_template('character.html', characters=characters, character=character, form=form, mode=mode)
 
 
 @app.route('/character/add', methods=['post'])
