@@ -13,7 +13,30 @@
         </div>
         <br>
         <div class="row col-md-offset-1 col-md-8">
-            {{ character_table }}
+            <table class="table" id="characterTable">
+                <thead>
+                    <tr>
+                        <th>Character</th>
+                        <th>Dead</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for character in characters %}
+                    <tr>
+                        <td>{{character.name}}</td>
+                        <td>
+                            {% if character.is_dead %}
+                                <i class="glyphicon glyphicon-remove"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="character/{{ character.id}}" class="link" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="row col-md-offset-1 col-md-6">
             <h2>Add Character</h2>

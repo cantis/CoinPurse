@@ -2,7 +2,6 @@ from flask import Flask, render_template, url_for, redirect
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
-from flask_table import Table, Col
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -56,35 +55,6 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     is_dead = db.Column(db.Boolean, default=False)
-
-
-# HTML Tables
-class EntriesTable(Table):
-    """ Defines an flask_table for Entries """
-    classes = ['table']
-    table_id = 'tranTable'
-    thead_classes = ['table__header']
-    no_items = 'No Transactions Recorded'
-
-    def get_tr_attrs(self, item):
-        return{'class': 'table__row'}
-    id = Col('Id', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-    session = Col('Session', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-    description = Col('Description', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-    amount = Col('Amount', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-
-
-class CharacterTable(Table):
-    """ Defines a flask_table listing Characters """
-    classes = ['table']
-    table_id = 'characterTable'
-    thead_classes = ['table__header']
-    no_items = 'No Character Defined'
-
-    def get_tr_attrs(self, item):
-        return{'class': 'table__row'}
-    name = Col('Character', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
-    is_dead = Col('Is Dead', th_html_attrs={'class': 'table__header'}, td_html_attrs={'class': 'table__cell'})
 
 
 # Quick Forms
@@ -143,9 +113,8 @@ def add_transaction():
 @app.route('/character', methods=['get'])
 def character_list():
     characters = Character.query.all()
-    character_table = CharacterTable(characters)
     add_character_form = AddCharacterForm()
-    return render_template('character.html', character_table=character_table, add_character_form=add_character_form)
+    return render_template('character.html', characters=characters, add_character_form=add_character_form)
 
 
 @app.route('/character/add', methods=['post'])
