@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, request
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
@@ -66,6 +66,7 @@ class AddEntryForm(FlaskForm):
 
 
 class EditEntryForm(FlaskForm):
+    """ Edit a transaction / entry Form """
     id = HiddenField()
     session = IntegerField(label='Session', validators=[InputRequired('Please provide session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
@@ -85,12 +86,28 @@ class EditCharacterForm(FlaskForm):
     is_dead = BooleanField(label="Is Dead")
 
 
+current_character = Character()
+
+
 # Route Handlers
 @app.route('/', methods=['get'])
 def index():
     entries = Entry.query.all()
+    characters = Character.query.all()
     add_form = AddEntryForm()
-    return render_template('index.html', entries=entries, add_form=add_form)
+    selected_name = ''
+    if current_character is not None:
+        selected_name = current_character.name
+    # selected_name = 'Alpha'
+    return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
+
+
+@app.route('/change_character', methods=['post'])
+def change_character():
+    selection = request.form.get('select_character')
+    global current_character
+    current_character = Character.query.get(selection)
+    return redirect(url_for('index'))
 
 
 @app.route('/add', methods=['post'])
@@ -115,6 +132,7 @@ def character_list():
     characters = Character.query.all()
     form = AddCharacterForm()
     form.process(obj=characters)
+    form.name(class_='col-md-4')
     return render_template('character.html', characters=characters, form=form, mode='add')
 
 
