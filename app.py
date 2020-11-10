@@ -57,6 +57,14 @@ class Character(db.Model):
     is_dead = db.Column(db.Boolean, default=False)
 
 
+class Setting(db.Model):
+    """ Stores persistent settings for the application """
+    __tablename__ = 'Settings'
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(), nullable=False)
+    value = db.Column(db.String(), nullable=False)
+
+
 # Quick Forms
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
@@ -86,7 +94,8 @@ class EditCharacterForm(FlaskForm):
     is_dead = BooleanField(label="Is Dead")
 
 
-current_character = Character()
+# Module Global
+_current_character = Character()
 
 
 # Route Handlers
@@ -96,8 +105,8 @@ def index():
     characters = Character.query.all()
     add_form = AddEntryForm()
     selected_name = ''
-    if current_character is not None:
-        selected_name = current_character.name
+    if _current_character is not None:
+        selected_name = _current_character.name
     # selected_name = 'Alpha'
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
@@ -105,8 +114,8 @@ def index():
 @app.route('/change_character', methods=['post'])
 def change_character():
     selection = request.form.get('select_character')
-    global current_character
-    current_character = Character.query.get(selection)
+    global _current_character
+    _current_character = Character.query.get(selection)
     return redirect(url_for('index'))
 
 
@@ -139,7 +148,7 @@ def character_list():
 @app.route('/character/<id>', methods=['get', 'post'])
 def edit_character(id):
     """ Handle editing an existing Character """
-    
+
     # The single character we are editing
     character = Character.query.get(id)
     # Data for the list of characters
@@ -177,3 +186,24 @@ def add_character():
         db.session.commit()
 
     return redirect(url_for('character_list'))
+
+
+def set_current_character():
+    """ Check the database for a previously set active character
+    if one isn't set then set the 'first one in the database. """
+
+    global _current_character
+
+    # A filtered query
+    # current = db.session.query(Setting).filter(Setting.key == 'current_character').all()
+
+    # or another, shorter way
+    # current = db.session.query(Setting).filter_by(key='current_character').all() 
+
+    # Scalar value, single value if it exists or None
+    # current = db.session.scalar(Setting).filter_by(key='current_character')
+    current = Setting.scalar(Setting).filter_by(key='current_character')
+
+    if not current:
+        current = Character.first
+        pass
