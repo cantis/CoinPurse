@@ -198,7 +198,7 @@ def set_current_character():
     # current = db.session.query(Setting).filter(Setting.key == 'current_character').all()
 
     # or another, shorter way
-    # current = db.session.query(Setting).filter_by(key='current_character').all() 
+    # current = db.session.query(Setting).filter_by(key='current_character').all()
 
     # Scalar value, single value if it exists or None
     # current = db.session.scalar(Setting).filter_by(key='current_character')
