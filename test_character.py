@@ -72,4 +72,4 @@ def test_current_character_none(client):
     char = get_current_character()
 
     # assert
-    assert char.name == '*AddNew*'
+    assert char is None

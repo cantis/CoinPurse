@@ -211,10 +211,9 @@ def generate_current_character():
     if not current:
         current = Character.query.first()
 
-    # ok none created and we don't have at least one return a string that let's us know to do
-    # something drastic
+    # ok none created and we don't have at least one return none and let the caller deal
     if not current:
-        current = Character(name='*AddNew*')
+        current = None
 
     _current_character = current
 
