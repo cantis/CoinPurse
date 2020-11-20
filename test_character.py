@@ -1,6 +1,6 @@
 import pytest
 
-from main import app, db, Character, get_current_character
+from main import app, db, Character, get_current_character, blank_current_character
 from config import TestConfig
 
 
@@ -13,6 +13,7 @@ def client():
         with app.app_context():
             db.create_all()
         yield client
+        db.drop_all()
 
 
 def test_create_character():
@@ -51,6 +52,7 @@ def test_check_character_listed(client):
 def test_get_current_character(client):
     """ Get the current character, with none set but at lease one Caracter Created """
     # arrange
+    blank_current_character()
     db.session.add(Character(name='Paladin', is_dead=False))
     db.session.commit()
 
@@ -64,6 +66,7 @@ def test_get_current_character(client):
 def test_current_character_none(client):
     """ Get the current character, with none set and none created """
     # arrange
+    blank_current_character()
 
     # act
     char = get_current_character()

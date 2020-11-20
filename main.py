@@ -188,7 +188,7 @@ def add_character():
     return redirect(url_for('character_list'))
 
 
-def set_current_character():
+def generate_current_character():
     """ Check the database for a previously set active character
     if one isn't set then set the 'first one in the database. """
 
@@ -210,7 +210,7 @@ def set_current_character():
     # no current character set, do we have one created, if so return the first one.
     if not current:
         current = Character.query.first()
-    
+
     # ok none created and we don't have at least one return a string that let's us know to do
     # something drastic
     if not current:
@@ -219,7 +219,12 @@ def set_current_character():
     _current_character = current
 
 
+def blank_current_character():
+    global _current_character
+    _current_character = None
+
+
 def get_current_character():
-    if _current_character.name is None:
-        set_current_character()
+    if _current_character is None:
+        generate_current_character()
     return _current_character
