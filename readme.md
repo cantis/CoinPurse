@@ -16,4 +16,20 @@ Evan
 Should now add testing I think.
 
 ## 19 Nov
-Got Pytest working... kinda, I had to put a fix into ``` __init__ ``` that shouldn't be necessary
+Got Pytest working... Note, I had to put a fix into ``` __init__ ``` that shouldn't be necessary
+
+Also got code coverage working! execute the following
+
+*Note: I have a .coveragerc file that limits the coverage data to the project source.*
+
+** Generage the coverage data **  
+``` PS> coverage run --source=. -m pytest```
+
+** Show the report (command line) **  
+``` PS> coverage report ```
+
+** Generate the HTML Coverage report into **  
+``` PS> coverage html ```
+
+
+

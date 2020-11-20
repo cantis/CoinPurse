@@ -1,6 +1,6 @@
 import pytest
 
-from main import app, db, Character, AddCharacterForm
+from main import app, db, Character, get_current_character
 from config import TestConfig
 
 
@@ -27,12 +27,46 @@ def test_get_character_list(client):
 
 
 def test_add_character(client):
-    client.post('/character/add', data=dict(name='test', is_dead=False), follow_redirects=True)
+    # arrange
+
+    # act
+    client.post('/character/add', data=dict(name='Rogue', is_dead=False), follow_redirects=True)
+
+    # assert
     char = Character.query.get(1)
-    assert char.name == 'test'
+    assert char.name == 'Rogue'
     assert char.is_dead is True
 
 
 def test_check_character_listed(client):
-    rv = client.post('/character/add', data=dict(name='peanut', is_dead=False), follow_redirects=True)
-    assert b'peanut' in rv.data
+    # arrange
+
+    # act
+    rv = client.post('/character/add', data=dict(name='Ranger', is_dead=False), follow_redirects=True)
+
+    # asert
+    assert b'Ranger' in rv.data
+
+
+def test_get_current_character(client):
+    """ Get the current character, with none set but at lease one Caracter Created """
+    # arrange
+    db.session.add(Character(name='Paladin', is_dead=False))
+    db.session.commit()
+
+    # act
+    char = get_current_character()
+
+    # assert
+    assert char.name == 'Paladin'
+
+
+def test_current_character_none(client):
+    """ Get the current character, with none set and none created """
+    # arrange
+
+    # act
+    char = get_current_character()
+
+    # assert
+    assert char.name == '*AddNew*'

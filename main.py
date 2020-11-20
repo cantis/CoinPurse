@@ -202,8 +202,24 @@ def set_current_character():
 
     # Scalar value, single value if it exists or None
     # current = db.session.scalar(Setting).filter_by(key='current_character')
-    current = Setting.scalar(Setting).filter_by(key='current_character')
+    # current = Setting.scalar(Setting).filter_by(key='current_character')
 
+    # get the current character
+    current = Setting.query.filter_by(key='current_character').first()
+
+    # no current character set, do we have one created, if so return the first one.
     if not current:
-        current = Character.first
-        pass
+        current = Character.query.first()
+    
+    # ok none created and we don't have at least one return a string that let's us know to do
+    # something drastic
+    if not current:
+        current = Character(name='*AddNew*')
+
+    _current_character = current
+
+
+def get_current_character():
+    if _current_character.name is None:
+        set_current_character()
+    return _current_character
