@@ -107,7 +107,6 @@ def index():
     selected_name = ''
     if _current_character is not None:
         selected_name = _current_character.name
-    # selected_name = 'Alpha'
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
 
@@ -221,6 +220,14 @@ def generate_current_character():
 def blank_current_character():
     global _current_character
     _current_character = None
+
+
+def set_current_character(id):
+    global _current_character
+
+    char = Character.query.get(id)
+    if char:
+        _current_character = char
 
 
 def get_current_character():
