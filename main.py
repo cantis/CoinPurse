@@ -3,6 +3,8 @@ from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import InputRequired
@@ -19,7 +21,7 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 # To create the database at the command line execute:
 #   python
-#   >>>from app import db
+#   >>>from main import db (main the the file where the application is located)
 #   >>>db.create_all()
 #   >>>quit()
 migrate = Migrate(app, db)
@@ -47,6 +49,7 @@ class Entry(db.Model):
     session = db.Column(db.Integer)
     description = db.Column(db.String(150), default='')
     amount = db.Column(db.Float)
+    character_id = Column(Integer, ForeignKey('Characters.id'))
 
 
 class Character(db.Model):
@@ -55,6 +58,7 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     is_dead = db.Column(db.Boolean, default=False)
+    entries = relationship('Entry', backref='character')
 
 
 class Setting(db.Model):
@@ -114,7 +118,7 @@ def index():
 def change_character():
     selection = request.form.get('select_character')
     global _current_character
-    _current_character = Character.query.get(selection)
+    set_current_character(selection)
     return redirect(url_for('index'))
 
 
@@ -124,7 +128,6 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
         new_entry = Entry(
-            id=form.id.data,
             session=form.session.data,
             description=form.description.data,
             amount=form.amount.data

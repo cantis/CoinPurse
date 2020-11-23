@@ -149,3 +149,14 @@ def test_edit_character_missingdata(client_loaded):
 
     # assert
     assert b'Edit Character' in result.data
+
+
+def test_change_current_charter_on_form(client_loaded):
+    # arrange
+    set_current_character(2)
+
+    # act
+    client_loaded.post('change_character', data=dict(select_character=3), follow_redirects=True)
+
+    # assert
+    assert get_current_character().id == 3
