@@ -46,7 +46,7 @@ class Entry(db.Model):
     """ Represents an entry in the purse """
     __tablename__ = 'Entries'
     id = db.Column(db.Integer, primary_key=True)
-    session = db.Column(db.Integer)
+    game_session = db.Column(db.Integer)
     description = db.Column(db.String(150), default='')
     amount = db.Column(db.Float)
     character_id = Column(Integer, ForeignKey('Characters.id'))
@@ -128,7 +128,7 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
         new_entry = Entry(
-            session=form.session.data,
+            game_session=form.session.data,
             description=form.description.data,
             amount=form.amount.data
             )
