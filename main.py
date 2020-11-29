@@ -63,6 +63,14 @@ class Character(db.Model):
     entries = relationship('Entry', backref='character')
 
 
+class Setting(db.Model):
+    """ Stores persistent settings for the application """
+    __tablename__ = 'Settings'
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(), nullable=False)
+    value = db.Column(db.String(), nullable=False)
+
+
 # Quick Forms
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
