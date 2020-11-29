@@ -1,17 +1,25 @@
+""" Tests involved in CRUD for transaction Entries """
 import pytest
 
-from main import app, db, Entry
 from config import TestConfig
+from main import app, db, Entry, Character
 
 
 @pytest.fixture
-def client():
+def client(scope='function'):
     config = TestConfig()
     app.config.from_object(config)
 
     with app.test_client() as client:
+        # Create the Database
         with app.app_context():
             db.create_all()
+        # Add some Characters
+        db.session.add(Character(id=1, name='Paladin', is_dead=False))
+        db.session.add(Character(id=2, name='Rogue', is_dead=False))
+        db.session.add(Character(id=3, name='Fighter', is_dead=False))
+        db.session.commit()
+        
         yield client
         db.drop_all()
 

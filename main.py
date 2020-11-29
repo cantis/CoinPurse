@@ -63,14 +63,6 @@ class Character(db.Model):
     entries = relationship('Entry', backref='character')
 
 
-class Setting(db.Model):
-    """ Stores persistent settings for the application """
-    __tablename__ = 'Settings'
-    id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.String(), nullable=False)
-    value = db.Column(db.String(), nullable=False)
-
-
 # Quick Forms
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
@@ -116,12 +108,7 @@ def index():
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
 
-@app.route('/change_character', methods=['post'])
-def change_character():
-    selection = request.form.get('select_character')
-    global _current_character
-    set_current_character(selection)
-    return redirect(url_for('index'))
+
 
 
 @app.route('/add', methods=['post'])
@@ -227,12 +214,24 @@ def blank_current_character():
     _current_character = None
 
 
+@app.route('/character/add', methods=['post'])
 def set_current_character(id):
     global _current_character
 
     char = Character.query.get(id)
     if char:
+        try:
+            session['current_character'] = 'blank'
+        except Exception as e:
+            print(e.message)
         _current_character = char
+
+
+@app.route('/change_character', methods=['post'])
+def change_character():
+    selection = request.form.get('select_character')
+    session['current_character'] = selection
+    return redirect(url_for('index'))
 
 
 def get_current_character():

@@ -1,11 +1,12 @@
+""" Tests related to CRUD operations for Characters """
 import pytest
 
-from main import app, db, Character, get_current_character, blank_current_character, set_current_character
+from main import app, db, Character
 from config import TestConfig
 
 
 @pytest.fixture
-def client():
+def client(scope='function'):
     config = TestConfig()
     app.config.from_object(config)
 
@@ -14,11 +15,6 @@ def client():
             db.create_all()
         yield client
         db.drop_all()
-
-
-# @pytest.fixture(autouse=True)
-# def client_reset(client):
-#     db.drop_all()
 
 
 @pytest.fixture
@@ -69,63 +65,6 @@ def test_check_character_listed(client):
     assert b'Ranger' in rv.data
 
 
-def test_get_current_character(client):
-    """ Get the current character, with none set but at lease one Caracter Created """
-    # arrange
-    blank_current_character()
-    db.session.add(Character(name='Paladin', is_dead=False))
-    db.session.commit()
-
-    # act
-    char = get_current_character()
-
-    # assert
-    assert char.name == 'Paladin'
-
-
-def test_current_character_none(client):
-    """ Get the current character, with none set and none created """
-    # arrange
-    blank_current_character()
-
-    # act
-    char = get_current_character()
-
-    # assert
-    assert char is None
-
-
-def test_change_current_character(client):
-    # arrange
-    blank_current_character()
-    db.session.add(Character(id=1, name='Paladin', is_dead=False))
-    db.session.add(Character(id=2, name='Rogue', is_dead=False))
-    db.session.add(Character(id=3, name='Fighter', is_dead=False))
-    set_current_character(2)
-
-    # act
-    client.post('/change_character', data=dict(select_character='3'), follow_redirects=True)
-
-    # assert
-    result = get_current_character()
-    assert result.name == 'Fighter'
-
-
-def test_set_current_character(client):
-    # arrange
-    blank_current_character()
-    db.session.add(Character(id=1, name='Paladin', is_dead=False))
-    db.session.add(Character(id=2, name='Rogue', is_dead=False))
-    db.session.add(Character(id=3, name='Fighter', is_dead=False))
-
-    # act
-    set_current_character(2)
-
-    # assert
-    result = get_current_character()
-    assert result.name == 'Rogue'
-
-
 def test_edit_character_ok(client_loaded):
     # arrange
 
@@ -151,12 +90,3 @@ def test_edit_character_missingdata(client_loaded):
     assert b'Edit Character' in result.data
 
 
-def test_change_current_charter_on_form(client_loaded):
-    # arrange
-    set_current_character(2)
-
-    # act
-    client_loaded.post('change_character', data=dict(select_character=3), follow_redirects=True)
-
-    # assert
-    assert get_current_character().id == 3
