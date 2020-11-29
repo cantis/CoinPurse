@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, session
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
@@ -13,9 +13,11 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 
+
 # Set Configuration
 config = DevConfig()
 app.config.from_object(config)
+
 
 # Initialize DB object
 db = SQLAlchemy(app)
@@ -72,7 +74,7 @@ class Setting(db.Model):
 # Quick Forms
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
-    session = IntegerField(label='Session', validators=[InputRequired('Please provide session number.')])
+    game_session = IntegerField(label='Session', validators=[InputRequired('Please provide a game session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
     amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
 
@@ -80,7 +82,7 @@ class AddEntryForm(FlaskForm):
 class EditEntryForm(FlaskForm):
     """ Edit a transaction / entry Form """
     id = HiddenField()
-    session = IntegerField(label='Session', validators=[InputRequired('Please provide session number.')])
+    game_session = IntegerField(label='Session', validators=[InputRequired('Please provide game session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
     amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
 
@@ -128,7 +130,7 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
         new_entry = Entry(
-            game_session=form.session.data,
+            game_session=form.game_session.data,
             description=form.description.data,
             amount=form.amount.data
             )
