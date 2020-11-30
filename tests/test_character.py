@@ -88,5 +88,3 @@ def test_edit_character_missingdata(client_loaded):
 
     # assert
     assert b'Edit Character' in result.data
-
-

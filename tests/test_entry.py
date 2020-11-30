@@ -19,7 +19,7 @@ def client(scope='function'):
         db.session.add(Character(id=2, name='Rogue', is_dead=False))
         db.session.add(Character(id=3, name='Fighter', is_dead=False))
         db.session.commit()
-        
+
         yield client
         db.drop_all()
 

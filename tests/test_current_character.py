@@ -27,10 +27,10 @@ def test_set_current_character(client):
     character_id = 2
 
     # act
-    rv = client.post('/change_character', data=dict(select_character=character_id), follow_redirects=True)
+    rv = client.post('/current_character', data=dict(id=character_id), follow_redirects=True)
 
     # assert
-    assert b'Rogue' in rv.data
+    assert rv.status_code == 200
 
 
 def test_current_character_none(client):
@@ -42,3 +42,16 @@ def test_current_character_none(client):
 
     # assert
     assert b'Paladin' in rv.data
+
+
+def test_saved_character_setting(client):
+    """ get_current_character from Settings table """
+    # arrange
+    character_id = 3
+    client.post('/current_character', data=dict(id=character_id), follow_redirects=True)
+
+    # act
+    rv = client.get('/')
+
+    # assert
+    assert b'Fighter' in rv.data

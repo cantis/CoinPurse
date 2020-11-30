@@ -1,4 +1,5 @@
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, render_template, url_for, redirect, session, Response
+from flask.globals import request
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
 from config import DevConfig
@@ -111,12 +112,11 @@ def index():
     characters = Character.query.all()
     add_form = AddEntryForm()
     selected_name = ''
-    if _current_character is not None:
-        selected_name = _current_character.name
+    if session.get('current_character') is None:
+        generate_current_character()
+    else:
+        selected_name = Character.query.filter_by(id=session['current_character']).first().name
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
-
-
-
 
 
 @app.route('/add', methods=['post'])
@@ -187,6 +187,21 @@ def add_character():
     return redirect(url_for('character_list'))
 
 
+@app.route('/current_character', methods=['post'])
+def set_current_character():
+    id = request.form['id']
+    char = Character.query.get(id)
+    if char:
+        session['current_character'] = str(char.id)
+        return Response(status=200)
+
+
+def get_current_character():
+    if session['current_character'] is None:
+        generate_current_character()
+    return session['current_character']
+
+
 def generate_current_character():
     """ Check the database for a previously set active character
     if one isn't set then set the 'first one in the database. """
@@ -215,34 +230,3 @@ def generate_current_character():
         current = None
 
     _current_character = current
-
-
-def blank_current_character():
-    global _current_character
-    _current_character = None
-
-
-@app.route('/character/add', methods=['post'])
-def set_current_character(id):
-    global _current_character
-
-    char = Character.query.get(id)
-    if char:
-        try:
-            session['current_character'] = 'blank'
-        except Exception as e:
-            print(e.message)
-        _current_character = char
-
-
-@app.route('/change_character', methods=['post'])
-def change_character():
-    selection = request.form.get('select_character')
-    session['current_character'] = selection
-    return redirect(url_for('index'))
-
-
-def get_current_character():
-    if _current_character is None:
-        generate_current_character()
-    return _current_character
