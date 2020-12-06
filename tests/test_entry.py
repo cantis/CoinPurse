@@ -2,7 +2,7 @@
 import pytest
 
 from config import TestConfig
-from main import app, db, Entry, Character
+from main import app, db, Entry, Character, Setting
 
 
 @pytest.fixture
@@ -20,32 +20,15 @@ def client(scope='function'):
         db.session.add(Character(id=3, name='Fighter', is_dead=False))
         db.session.commit()
 
+        # Set the current Character
+        db.session.add(Setting(key='current_character', value='2'))
+        db.session.commit()
+
         yield client
         db.drop_all()
 
 
-def test_create_entry():
-    # arrange
-
-    # act
-    ent = Entry()
-    ent.description = 'Test Entry'
-
-    # assert
-    # assert ent.description == 'Test Entry'
-
-
-# def test_add_transaction_ok(client):
-#     # arrange
-#     data = dict(select_character=1, session=1, description="Wand of Healing", amount=-750.00)
-
-#     # act
-#     result = client.post('/add', data=data, follow_redirects=True)
-
-#     # assert
-#     ent = Entry().query.get(1)
-#     assert ent.description == 'Wand of Healing'
-#     assert ent.amount == -750.00
-#     assert ent.character_id == 10
-#     assert ent.session == 1
-#     assert b'Add Entry' in result.data
+def test_create_entry(client):
+    assert True
+    
+    # client.post('/current_character', data=dict(selected_character=character_id), follow_redirects=True)

@@ -101,10 +101,6 @@ class EditCharacterForm(FlaskForm):
     is_dead = BooleanField(label="Is Dead")
 
 
-# Module Global
-_current_character = Character()
-
-
 # Route Handlers
 @app.route('/', methods=['get'])
 def index():
@@ -112,10 +108,12 @@ def index():
     characters = Character.query.all()
     add_form = AddEntryForm()
     selected_name = ''
-    if session.get('current_character') is None:
-        generate_current_character()
-    else:
-        selected_name = Character.query.filter_by(id=session['current_character']).first().name
+
+    if 'current_character' not in session:
+        current_id = get_current_character_id()
+        if current_id is None:
+            return redirect(url_for('character_list'))
+    selected_name = Character.query.filter_by(id=current_id).first().name
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
 
@@ -127,7 +125,7 @@ def add_transaction():
         new_entry = Entry(
             game_session=form.game_session.data,
             description=form.description.data,
-            amount=form.amount.data
+            amount=form.amount.data,
             )
         db.session.add(new_entry)
         db.session.commit()
@@ -189,24 +187,22 @@ def add_character():
 
 @app.route('/current_character', methods=['post'])
 def set_current_character():
-    id = request.form['id']
+    id = request.form['selected_character']
     char = Character.query.get(id)
     if char:
-        session['current_character'] = str(char.id)
+        setting = Setting.query.filter_by(key='current_character').first()
+        if setting:
+            setting.value = str(char.id)
+            db.session.commit
+        else:
+            db.session.add(Setting(key='current_character', value=str(char.id)))
+            db.session.commit
         return Response(status=200)
 
 
-def get_current_character():
-    if session['current_character'] is None:
-        generate_current_character()
-    return session['current_character']
-
-
-def generate_current_character():
+def get_current_character_id():
     """ Check the database for a previously set active character
     if one isn't set then set the 'first one in the database. """
-
-    global _current_character
 
     # A filtered query
     # current = db.session.query(Setting).filter(Setting.key == 'current_character').all()
@@ -218,15 +214,23 @@ def generate_current_character():
     # current = db.session.scalar(Setting).filter_by(key='current_character')
     # current = Setting.scalar(Setting).filter_by(key='current_character')
 
-    # get the current character
-    current = Setting.query.filter_by(key='current_character').first()
+    # See if there is a saved character id on the database, if so set it to current
+    current_id = Setting.query.filter_by(key='current_character').first()
+    char = Character()
 
-    # no current character set, do we have one created, if so return the first one.
-    if not current:
-        current = Character.query.first()
+    if current_id is None:
+        # no current_id has been saved try and get the first Character on the Character table and use that.
+        char = Character.query.first()
+        if char is None:
+            return None
 
-    # ok none created and we don't have at least one return none and let the caller deal
-    if not current:
-        current = None
+    else:
+        # Ok we have a character on the database, pull it up
+        char = Character.query.filter_by(id=current_id.value).first()
+        # now we can save the right data
+        db.session.add(Setting(key='current_character', value=str(char.id)))
+        db.session.commit
 
-    _current_character = current
+    # set the character we found up in session
+    session['current_character'] = char.id
+    return char.id

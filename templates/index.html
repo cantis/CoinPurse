@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">Current Character:</span>
-                            <select class="selectpicker form-control" name="select_character" id="select_character" onchange="this.form.submit()">
+                            <select class="selectpicker form-control" name="selected_character" id="selected_character" onchange="this.form.submit()">
                                 {%for char in characters %}
                                     {% if char.name == selected_name %}
                                         <option value="{{char.id}}" selected>{{char.name}}</option>
