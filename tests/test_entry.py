@@ -136,14 +136,22 @@ def test_create_entry_check_displayed_amount(client):
     assert b'45.89' in rv.data
 
 
-def test_entries_change_for_character(entry_client):
+def test_entries_change_by_character(entry_client):
+    # a two stage test, do it once, change character and check again, the
+    # entries displayed should switch each time.
 
+    # arrange
     entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
+    # act
     rv1 = entry_client.get('/', follow_redirects=True)
+    # assert
     assert b'Sword' in rv1.data
     assert b'Spear' not in rv1.data
 
+    # arrange
     entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
+    # act
     rv2 = entry_client.get('/', follow_redirects=True)
+    # assert
     assert b'Spear' in rv2.data
     assert b'Sword' not in rv2.data
