@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, session, Response
+from flask import Flask, render_template, url_for, redirect, session
 from flask.globals import request
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
 from wtforms.fields.simple import HiddenField
@@ -197,14 +197,15 @@ def set_current_character():
     """ handle setting the current character """
     id = request.form['selected_character']
     char = Character.query.get(id)
-    if char:
+    if char is not None:
         setting = Setting.query.filter_by(key='current_character').first()
-        if setting:
+        if setting is not None:
             setting.value = str(char.id)
-            db.session.commit
+            db.session.commit()
         else:
             db.session.add(Setting(key='current_character', value=str(char.id)))
-            db.session.commit
+            db.session.commit()
+        session['current_character'] = char.id
         return redirect(url_for('index'))
 
 

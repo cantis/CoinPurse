@@ -32,7 +32,7 @@ def client(scope='function'):
 def entry_client(scope='function'):
     config = TestConfig()
     app.config.from_object(config)
-    with app.test_client() as client:
+    with app.test_client() as entry_client:
         # create the database
 
         with app.app_context():
@@ -50,13 +50,14 @@ def entry_client(scope='function'):
 
         # Add some entries
         db.session.add(Entry(id=1, game_session=1, description='Wand', amount=10.00, character_id=2))
-        db.session.add(Entry(id=1, game_session=1, description='Sword', amount=20.00, character_id=2))
-        db.session.add(Entry(id=1, game_session=1, description='Potion', amount=30.00, character_id=2))
-        db.session.add(Entry(id=1, game_session=1, description='Crossbow', amount=40.00, character_id=3))
-        db.session.add(Entry(id=1, game_session=1, description='Spear', amount=50.00, character_id=4))
-        db.session.add(Entry(id=1, game_session=1, description='Backpack', amount=60.00, character_id=5))
+        db.session.add(Entry(id=2, game_session=1, description='Sword', amount=20.00, character_id=2))
+        db.session.add(Entry(id=3, game_session=1, description='Potion', amount=30.00, character_id=2))
+        db.session.add(Entry(id=4, game_session=1, description='Crossbow', amount=40.00, character_id=3))
+        db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=4))
+        db.session.add(Entry(id=6, game_session=1, description='Backpack', amount=60.00, character_id=5))
+        db.session.commit()
 
-        yield client
+        yield entry_client
         db.drop_all()
 
 
@@ -137,10 +138,10 @@ def test_create_entry_check_displayed_amount(client):
 
 def test_entries_change_for_character(entry_client):
 
-    client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
-    rv1 = client.get('/', follow_redirects=True)
+    entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
+    rv1 = entry_client.get('/', follow_redirects=True)
     assert b'Wand' in rv1.data
 
-    client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
-    rv2 = client.get('/', follow_redirects=True)
+    entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
+    rv2 = entry_client.get('/', follow_redirects=True)
     assert b'Spear' in rv2.data
