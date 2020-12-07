@@ -34,5 +34,6 @@ Also got code coverage working! execute the following
 ## 7 December
 Got the entry code and tests to work and now I'm trying to deploy it to Google Cloud Run!
 
+Yeaaa
 
 
