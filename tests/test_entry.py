@@ -53,8 +53,8 @@ def entry_client(scope='function'):
         db.session.add(Entry(id=2, game_session=1, description='Sword', amount=20.00, character_id=2))
         db.session.add(Entry(id=3, game_session=1, description='Potion', amount=30.00, character_id=2))
         db.session.add(Entry(id=4, game_session=1, description='Crossbow', amount=40.00, character_id=3))
-        db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=4))
-        db.session.add(Entry(id=6, game_session=1, description='Backpack', amount=60.00, character_id=5))
+        db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=3))
+        db.session.add(Entry(id=6, game_session=1, description='Backpack', amount=60.00, character_id=3))
         db.session.commit()
 
         yield entry_client
@@ -140,8 +140,10 @@ def test_entries_change_for_character(entry_client):
 
     entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
     rv1 = entry_client.get('/', follow_redirects=True)
-    assert b'Wand' in rv1.data
+    assert b'Sword' in rv1.data
+    assert b'Spear' not in rv1.data
 
     entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
     rv2 = entry_client.get('/', follow_redirects=True)
     assert b'Spear' in rv2.data
+    assert b'Sword' not in rv2.data

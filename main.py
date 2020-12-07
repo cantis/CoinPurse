@@ -104,19 +104,16 @@ class EditCharacterForm(FlaskForm):
 # Route Handlers
 @app.route('/', methods=['get'])
 def index():
-    entries = Entry.query.all()
+    current_id = get_current_character_id()
+    if current_id is None:
+        return redirect(url_for('character_list'))
+
+    selected_name = Character.query.filter_by(id=current_id).first().name
+    entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
     add_form = AddEntryForm()
     if 'game_session' in session:
         add_form.game_session.data = session['game_session']
-    selected_name = ''
-
-    if 'current_character' not in session:
-        current_id = get_current_character_id()
-        if current_id is None:
-            return redirect(url_for('character_list'))
-
-    selected_name = Character.query.filter_by(id=session['current_character']).first().name
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
 
