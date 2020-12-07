@@ -107,13 +107,16 @@ def index():
     entries = Entry.query.all()
     characters = Character.query.all()
     add_form = AddEntryForm()
+    if 'game_session' in session:
+        add_form.game_session.data = session['game_session']
     selected_name = ''
 
     if 'current_character' not in session:
         current_id = get_current_character_id()
         if current_id is None:
             return redirect(url_for('character_list'))
-    selected_name = Character.query.filter_by(id=current_id).first().name
+
+    selected_name = Character.query.filter_by(id=session['current_character']).first().name
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
 
 
@@ -126,15 +129,20 @@ def add_transaction():
             game_session=form.game_session.data,
             description=form.description.data,
             amount=form.amount.data,
+            character_id=get_current_character_id()
             )
         db.session.add(new_entry)
         db.session.commit()
+
+        # Save the session for re-use
+        session['game_session'] = form.game_session.data
 
     return redirect(url_for('index'))
 
 
 @app.route('/character', methods=['get'])
 def character_list():
+    """ show character list """
     characters = Character.query.all()
     form = AddCharacterForm()
     form.process(obj=characters)
@@ -145,7 +153,6 @@ def character_list():
 @app.route('/character/<id>', methods=['get', 'post'])
 def edit_character(id):
     """ Handle editing an existing Character """
-
     # The single character we are editing
     character = Character.query.get(id)
     # Data for the list of characters
@@ -187,6 +194,7 @@ def add_character():
 
 @app.route('/current_character', methods=['post'])
 def set_current_character():
+    """ handle setting the current character """
     id = request.form['selected_character']
     char = Character.query.get(id)
     if char:
@@ -197,7 +205,7 @@ def set_current_character():
         else:
             db.session.add(Setting(key='current_character', value=str(char.id)))
             db.session.commit
-        return Response(status=200)
+        return redirect(url_for('index'))
 
 
 def get_current_character_id():
@@ -213,6 +221,10 @@ def get_current_character_id():
     # Scalar value, single value if it exists or None
     # current = db.session.scalar(Setting).filter_by(key='current_character')
     # current = Setting.scalar(Setting).filter_by(key='current_character')
+
+    # see if their is a character id in session
+    if 'current_character' in session:
+        return session['current_character']
 
     # See if there is a saved character id on the database, if so set it to current
     current_id = Setting.query.filter_by(key='current_character').first()

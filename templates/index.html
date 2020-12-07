@@ -10,7 +10,7 @@
     <div class="container">
          <!-- Current Character Selector -->
          <div class="row col-md-4">
-            <form class="form-inline" action="/change_character" method="post">
+            <form class="form-inline" action="/current_character" method="post">
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">Current Character:</span>
@@ -27,7 +27,7 @@
                 </div>
             </form>
         </div>
-        <!-- Header  -->
+        <!-- Entry Table  -->
         <div class="row col-md-10">
             <h2 class="page-header">Transactions</h2>
         </div>
@@ -44,7 +44,7 @@
                 <tbody>
                     {% for entry in entries %}
                     <tr>
-                        <td>{{ entry.session }}</td>
+                        <td>{{ entry.game_session }}</td>
                         <td>{{ entry.description }}</td>
                         <td>{{ entry.amount }}</td>
                     </tr>
@@ -52,6 +52,7 @@
                 </tbody>
             </table>
         </div>
+        <!-- Add Entry Form -->
         <div class="row col-md-offset-1 col-md-6">
             <h2>Add Entry</h2>
             <form action="/add" method="post">

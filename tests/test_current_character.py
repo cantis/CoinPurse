@@ -42,10 +42,11 @@ def test_current_character_no_db_no_records():
             db.create_all()
 
     # act
-    rv = client.get('/')
+    rv = client.get('/', follow_redirects=True)
 
     # assert
-    assert b'Paladin' not in rv.data
+    assert b'Characters' in rv.data
+    assert b'Add Character' in rv.data
 
 
 def test_current_character_not_set(client):
@@ -53,7 +54,7 @@ def test_current_character_not_set(client):
     # arrange
 
     # act
-    rv = client.get('/')
+    rv = client.get('/', follow_redirects=True)
 
     # assert
     assert b'Paladin' in rv.data
@@ -95,7 +96,7 @@ def test_get_current_character_id(client):
     db.session.commit()
 
     # act
-    rv = rv = client.get('/')
+    rv = rv = client.get('/', follow_redirects=True)
 
     # assert
     assert b'Rogue' in rv.data
