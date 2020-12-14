@@ -32,7 +32,14 @@ Also got code coverage working! execute the following
 ``` PS> coverage html ```
 
 ## 7 December
-Got the entry code and tests to work and now I'm trying to deploy it to Google Cloud Run!
+Got the entry code and tests to work and now I'm trying to deploy it to Google Cloud Run!\
+
+## 13 December
+Well the Google Cloud didn't work first time but I'll keep working on it
+In the mean time I did add the code that produces a balance
+I've added some enhancements and a bug to the issue tracker on github
+
+
 
 
 
