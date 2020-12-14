@@ -34,7 +34,6 @@ def entry_client(scope='function'):
     app.config.from_object(config)
     with app.test_client() as entry_client:
         # create the database
-
         with app.app_context():
             db.create_all()
 

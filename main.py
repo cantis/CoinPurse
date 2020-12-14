@@ -112,9 +112,10 @@ def index():
     entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
     add_form = AddEntryForm()
+    balance = get_balance()
     if 'game_session' in session:
         add_form.game_session.data = session['game_session']
-    return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name)
+    return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name, balance=balance)
 
 
 @app.route('/add', methods=['post'])
@@ -204,6 +205,16 @@ def set_current_character():
             db.session.commit()
         session['current_character'] = char.id
         return redirect(url_for('index'))
+
+
+def get_balance():
+    """ Get the balance for a character """
+    character_id = get_current_character_id()
+    entries = Entry.query.filter_by(character_id=character_id)
+    balance = 0
+    for entry in entries:
+        balance += entry.amount
+    return balance
 
 
 def get_current_character_id():
