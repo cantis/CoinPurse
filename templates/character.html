@@ -47,7 +47,6 @@
             <form action="/character/add" method="post">
                 <dl>
                     {{ wtf.quick_form(form) }}
-                    <a href="/character/add" class="btn btn-secondary" role="button" areia-disabled="true">Cancel</a>
                     <input type="submit" value="Add Character" class="btn btn-primary">
                 </dl>
             </form>
@@ -60,7 +59,7 @@
             <form action="/character/{{character.id}}" method="post">
                 <dl>
                     {{ wtf.quick_form(form) }}
-                    <a href="/character/add" class="btn btn-secondary" role="button" areia-disabled="true">Cancel</a>
+                    <a href="/character" class="btn btn-secondary" role="button">Cancel</a>
                     <input type="submit" value="Save" class="btn btn-primary">
                 </dl>
             </form>
