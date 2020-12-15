@@ -41,7 +41,7 @@ def test_balance_showing(client):
     # arrange
 
     # act
-    rv = client.get('/', follow_redirects=True)
+    rv = client.get('/entry', follow_redirects=True)
 
     # assert
     assert b'Balance:' in rv.data
@@ -51,7 +51,7 @@ def test_get_balance_character_one(client):
     # arrange
 
     # act
-    rv = client.get('/', follow_redirects=True)
+    rv = client.get('/entry', follow_redirects=True)
 
     # assert
     assert b'60.00' in rv.data
@@ -63,7 +63,7 @@ def test_get_balance_character_two(client):
     rv = client.post('/current_character', data=dict(selected_character=character_id), follow_redirects=True)
 
     # act
-    rv = client.get('/', follow_redirects=True)
+    rv = client.get('/entry', follow_redirects=True)
 
     # assert
     assert b'150.00' in rv.data

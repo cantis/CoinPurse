@@ -29,7 +29,7 @@
         </div>
         <!-- Entry Table  -->
         <div class="row col-md-10">
-            <h2 class="page-header">Transactions</h2>
+            <h2 class="page-header">Entries</h2>
         </div>
         <br>
         <div class="row col-md-offset-1 col-md-8">
@@ -39,6 +39,7 @@
                         <th>Session</th>
                         <th>Description</th>
                         <th>Amount</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +48,9 @@
                         <td>{{ entry.game_session }}</td>
                         <td>{{ entry.description }}</td>
                         <td>{{ entry.amount }}</td>
+                        <td>
+                            <a href="/entry/{{entry.id}}" class="link" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -63,17 +67,51 @@
         </div>
 
         <!-- Add Entry Form -->
-        <div class="row col-md-offset-1 col-md-6">
-            <h2>Add Entry</h2>
-            <form action="/add" method="post">
-                <dl>
-                    {{ wtf.quick_form(add_form) }}
-                    <a href="/add" class="btn btn-secondary" role="button" areia-disabled="true">Cancel</a>
-                    <input type="submit" value="Add Entry" class="btn btn-primary">
-                </dl>
-            </form>
-        </div>
-        
+        {% if mode == 'add' %}
+            <div class="row col-md-offset-1 col-md-6">
+                <h2>Add Entry</h2>
+                <form action="/entry/add" method="post">
+                    <dl>
+                        {{ wtf.quick_form(form) }}
+                        <input type="submit" value="Add Entry" class="btn btn-primary">
+                    </dl>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Edit Form  -->
+        {% if mode == 'edit' %}
+            <div class="row col-md-offset-1 col-md-8">
+                <h2>Edit Entry</h2>
+                <form action="/entry/{{entry.id}}" class="form-horizontal" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="game_session" class="col-md-3 control-label">Game Session:</label>
+                        <div class="col-md-2">
+                            {{ form.game_session(class="form-control", placeholder="Game Session") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-md-3 control-label">Description:</label>
+                        <div class="col-md-6">
+                            {{ form.description(class="form-control", placeholder="Description") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" class="col-md-3 control-label">Amount:</label>
+                        <div class="col-md-2">
+                            {{ form.amount(class="form-control", placeholder="Amount") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-8">
+                            <a href="/entry" class="btn btn-secondary" role="button">Cancel</a>                    
+                            {{ form.submit(class="btn btn-primary", value="Save")}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}
 
