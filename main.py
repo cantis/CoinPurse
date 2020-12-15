@@ -72,12 +72,13 @@ class Setting(db.Model):
     value = db.Column(db.String(), nullable=False)
 
 
-# Quick Forms
+# WTForms Definitions
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
     game_session = IntegerField(label='Session', validators=[InputRequired('Please provide a game session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
     amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    submit = SubmitField('Save')
 
 
 class EditEntryForm(FlaskForm):
@@ -159,7 +160,7 @@ def edit_entry(id):
         entry.id = int(form.id.data)
         entry.game_session = form.game_session.data
         entry.description = form.description.data
-        entry.amount = form.amount.data
+        entry.amount = float(form.amount.data)
         db.session.commit()
         form = AddEntryForm()
         entry = None

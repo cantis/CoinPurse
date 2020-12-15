@@ -120,6 +120,36 @@ def test_edit_entry_description(entry_client):
     assert b'Add Entry' in rv.data
 
 
+def test_edit_entry_session(entry_client):
+    # arrange
+
+    # act
+    data = dict(id=2, game_session=5, description='Sword', amount=20.00)
+    rv = entry_client.post('/entry/2', data=data, follow_redirects=True)
+
+    # assert
+    entry = Entry.query.get(2)
+    assert entry.game_session == 5
+    assert entry.description == 'Sword'
+    assert entry.amount == 20.00
+    assert b'Add Entry' in rv.data
+
+
+def test_edit_entry_amount(entry_client):
+    # arrange
+
+    # act
+    data = dict(id=2, game_session=1, description='Sword', amount=24.00)
+    rv = entry_client.post('/entry/2', data=data, follow_redirects=True)
+
+    # assert
+    entry = Entry.query.get(2)
+    assert entry.game_session == 1
+    assert entry.description == 'Sword'
+    assert entry.amount == 24.00
+    assert b'Add Entry' in rv.data
+
+
 def test_edit_entry(client):
     # arrange
 
