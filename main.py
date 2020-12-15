@@ -102,7 +102,7 @@ class EditCharacterForm(FlaskForm):
 
 
 # Route Handlers
-@app.route('/', methods=['get'])
+@app.route('/entry', methods=['get'])
 def index():
     current_id = get_current_character_id()
     if current_id is None:
@@ -118,7 +118,7 @@ def index():
     return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name, balance=balance)
 
 
-@app.route('/add', methods=['post'])
+@app.route('/entry/add', methods=['post'])
 def add_transaction():
     """ Handle adding a new transaction """
     form = AddEntryForm()

@@ -64,7 +64,7 @@ def test_create_entry(client):
     # arrange
 
     # act
-    rv = client.post('/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    rv = client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
 
     # assert
     assert b'Wand of Heal' in rv.data
@@ -76,7 +76,7 @@ def test_create_entry_check_game_session(client):
     # arrange
 
     # act
-    client.post('/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
@@ -87,7 +87,7 @@ def test_create_entry_check_description(client):
     # arrange
 
     # act
-    client.post('/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
@@ -98,7 +98,7 @@ def test_create_entry_check_amount(client):
     # arrange
 
     # act
-    client.post('/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
@@ -109,7 +109,7 @@ def test_create_entry_check_displayed_game_session(client):
     # arrange
 
     # act
-    rv = client.post('/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    rv = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
 
     # assert
     assert b'567' in rv.data
@@ -119,7 +119,7 @@ def test_create_entry_check_displayed_description(client):
     # arrange
 
     # act
-    rv = client.post('/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    rv = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
 
     # assert
     assert b'Wand of Heal' in rv.data
@@ -129,7 +129,7 @@ def test_create_entry_check_displayed_amount(client):
     # arrange
 
     # act
-    rv = client.post('/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    rv = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
 
     # assert
     assert b'45.89' in rv.data
@@ -142,7 +142,7 @@ def test_entries_change_by_character(entry_client):
     # arrange
     entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
     # act
-    rv1 = entry_client.get('/', follow_redirects=True)
+    rv1 = entry_client.get('/entry', follow_redirects=True)
     # assert
     assert b'Sword' in rv1.data
     assert b'Spear' not in rv1.data
@@ -150,7 +150,7 @@ def test_entries_change_by_character(entry_client):
     # arrange
     entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
     # act
-    rv2 = entry_client.get('/', follow_redirects=True)
+    rv2 = entry_client.get('/entry', follow_redirects=True)
     # assert
     assert b'Spear' in rv2.data
     assert b'Sword' not in rv2.data
