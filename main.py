@@ -189,7 +189,6 @@ def add_character():
 
     return redirect(url_for('character_list'))
 
-
 @app.route('/current_character', methods=['post'])
 def set_current_character():
     """ handle setting the current character """

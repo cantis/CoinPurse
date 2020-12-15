@@ -33,13 +33,23 @@ def client_loaded():
 
 
 def test_create_character():
+    # arrange
     char = Character()
+
+    # act
     char.name = 'test'
+
+    # assert
     assert char.name == 'test'
 
 
 def test_get_character_list(client):
+    # arrange
+
+    # act
     rv = client.get('/character')
+
+    # assert
     assert b'Add Character' in rv.data
 
 
@@ -70,13 +80,34 @@ def test_edit_character_ok(client_loaded):
 
     # act
     data = dict(id=2, name='Wizard', is_dead=True)
-    result = client_loaded.post('/character/2', data=data, follow_redirects=True)
+    rv = client_loaded.post('/character/2', data=data, follow_redirects=True)
 
     # assert
     char = Character.query.get(2)
     assert char.name == 'Wizard'
     assert char.is_dead is True
-    assert b'Add Character' in result.data
+    assert b'Add Character' in rv.data
+
+
+def test_show_edit_character(client_loaded):
+    # arrange
+
+    # act
+    rv = client_loaded.post('/character/2', follow_redirects=True)
+
+    # assert
+    assert b'Edit' in rv.data
+
+
+def test_cancel_edit_character(client_loaded):
+    # arrange
+    client_loaded.post('/character/2', follow_redirects=True)
+
+    # act
+    rv = client_loaded.post('/character', follow_redirects=True)
+
+    # assert
+    assert b'Edit' not in rv.data
 
 
 def test_edit_character_missingdata(client_loaded):
