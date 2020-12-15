@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, session
 from flask.globals import request
 from wtforms.fields.core import BooleanField, FloatField, IntegerField
-from wtforms.fields.simple import HiddenField
+from wtforms.fields.simple import HiddenField, SubmitField
 from config import DevConfig
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, ForeignKey
@@ -86,6 +86,7 @@ class EditEntryForm(FlaskForm):
     game_session = IntegerField(label='Session', validators=[InputRequired('Please provide game session number.')])
     description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
     amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    submit = SubmitField('Save')
 
 
 class AddCharacterForm(FlaskForm):
@@ -102,7 +103,8 @@ class EditCharacterForm(FlaskForm):
 
 
 # Route Handlers
-@app.route('/entry', methods=['get'])
+@app.route('/', methods=['GET'])
+@app.route('/entry', methods=['GET'])
 def index():
     current_id = get_current_character_id()
     if current_id is None:
@@ -111,11 +113,13 @@ def index():
     selected_name = Character.query.filter_by(id=current_id).first().name
     entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
-    add_form = AddEntryForm()
+    form = AddEntryForm()
     balance = get_balance()
+    mode = 'add'
     if 'game_session' in session:
-        add_form.game_session.data = session['game_session']
-    return render_template('index.html', entries=entries, add_form=add_form, characters=characters, selected_name=selected_name, balance=balance)
+        form.game_session.data = session['game_session']
+    return render_template('index.html', mode=mode, entries=entries, form=form,
+                           characters=characters, selected_name=selected_name, balance=balance)
 
 
 @app.route('/entry/add', methods=['post'])
@@ -136,6 +140,37 @@ def add_transaction():
         session['game_session'] = form.game_session.data
 
     return redirect(url_for('index'))
+
+
+@app.route('/entry/<id>', methods=['get', 'post'])
+def edit_entry(id):
+    """ Handle editing an existing entry """
+    entry = Entry.query.get(id)
+    entries = Entry.query.all()
+    current_id = get_current_character_id()
+    selected_name = Character.query.filter_by(id=current_id).first().name
+    characters = Character.query.all()
+    balance = get_balance()
+
+    form = EditEntryForm()
+    mode = ''
+
+    if form.validate_on_submit():
+        entry.id = int(form.id.data)
+        entry.game_session = form.game_session.data
+        entry.description = form.description.data
+        entry.amount = form.amount.data
+        db.session.commit()
+        form = AddEntryForm()
+        entry = None
+        mode = 'add'
+    else:
+        mode = 'edit'
+
+    form.process(obj=entries)
+    form.process(obj=entry)
+    return render_template('index.html', form=form, mode=mode, entry=entry,
+                           entries=entries, characters=characters, selected_name=selected_name, balance=balance)
 
 
 @app.route('/character', methods=['get'])
@@ -188,6 +223,7 @@ def add_character():
         db.session.commit()
 
     return redirect(url_for('character_list'))
+
 
 @app.route('/current_character', methods=['post'])
 def set_current_character():

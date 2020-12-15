@@ -50,10 +50,10 @@ def entry_client(scope='function'):
         # Add some entries
         db.session.add(Entry(id=1, game_session=1, description='Wand', amount=10.00, character_id=2))
         db.session.add(Entry(id=2, game_session=1, description='Sword', amount=20.00, character_id=2))
-        db.session.add(Entry(id=3, game_session=1, description='Potion', amount=30.00, character_id=2))
+        db.session.add(Entry(id=3, game_session=2, description='Potion', amount=30.00, character_id=2))
         db.session.add(Entry(id=4, game_session=1, description='Crossbow', amount=40.00, character_id=3))
         db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=3))
-        db.session.add(Entry(id=6, game_session=1, description='Backpack', amount=60.00, character_id=3))
+        db.session.add(Entry(id=6, game_session=2, description='Backpack', amount=60.00, character_id=3))
         db.session.commit()
 
         yield entry_client
@@ -101,8 +101,53 @@ def test_create_entry_check_amount(client):
     client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
 
     # assert
-    result = Entry.query.filter_by(description='Wand of Heal').first()
-    assert result.amount == 10.02
+    rv = Entry.query.filter_by(description='Wand of Heal').first()
+    assert rv.amount == 10.02
+
+
+def test_edit_entry_description(entry_client):
+    # arrange
+
+    # act
+    data = dict(id=2, game_session=1, description='Flail', amount=20.00)
+    rv = entry_client.post('/entry/2', data=data, follow_redirects=True)
+
+    # assert
+    entry = Entry.query.get(2)
+    assert entry.game_session == 1
+    assert entry.description == 'Flail'
+    assert entry.amount == 20.00
+    assert b'Add Entry' in rv.data
+
+
+def test_edit_entry(client):
+    # arrange
+
+    # act
+    rv = client.post('/entry/2')
+
+    # assert
+    assert b'Edit' in rv.data
+
+
+def test_default_path(client):
+    # arrange
+
+    # act
+    rv = client.get('/')
+
+    # assert
+    assert b'Add Entry' in rv.data
+
+
+def test_entry_path(client):
+    # arrange
+
+    # act
+    rv = client.get('/entry')
+
+    # assert
+    assert b'Add Entry' in rv.data
 
 
 def test_create_entry_check_displayed_game_session(client):
