@@ -39,6 +39,16 @@ Well the Google Cloud didn't work first time but I'll keep working on it
 In the mean time I did add the code that produces a balance
 I've added some enhancements and a bug to the issue tracker on github
 
+## 30 December
+I've spent some time re-looking at docker and I'm re-setting docker and adding a docker-compose.
+Still having issues getting this running locally, so I can uderstand if it doesn't work when published. 
+I can get this running I have a series of updates to add:
+- Customize add entry form
+- Split functionality into blueprints
+- add user login
+- add login admin
+
+
 
 
 
