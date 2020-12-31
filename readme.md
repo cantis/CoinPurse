@@ -12,7 +12,7 @@ I'll document milestones here as I do them and my goals.
 
 Evan
 
-## 10 Nov
+## 10 Nov 2020
 Should now add testing I think.
 
 ## 19 Nov
@@ -47,6 +47,10 @@ I can get this running I have a series of updates to add:
 - Split functionality into blueprints
 - add user login
 - add login admin
+
+## 31 December
+Well, finally got the Docker / Docker-Compose to work i.e. run and be able to be hit! So, now on to some other work
+the entry form. 
 
 
 
