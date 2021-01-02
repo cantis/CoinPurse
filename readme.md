@@ -51,6 +51,9 @@ I can get this running I have a series of updates to add:
 ## 31 December
 Well, finally got the Docker / Docker-Compose to work i.e. run and be able to be hit! So, now on to some other work
 the entry form. 
+Acomplished Today:
+- Customized Add Entry
+
 
 
 
