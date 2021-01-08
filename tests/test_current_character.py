@@ -1,23 +1,31 @@
 """ Tests for setting the currently selected character """
-
 import pytest
-
-from main import app, db, Character, Setting
+from app import db, create_app
+from app.character.models import Character
+from app.entry.models import Setting
 from config import TestConfig
 
 
-@pytest.fixture
-def client(scope='function'):
+@pytest.fixture(scope='session')
+def app():
+    app = create_app()
     config = TestConfig()
     app.config.from_object(config)
+    return app
 
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
+
+@pytest.fixture(scope='function')
+def client(app):
+
+    with app.app_context():
+        client = app.test_client()
+        db.create_all()
+
         db.session.add(Character(id=1, name='Paladin', is_dead=False))
         db.session.add(Character(id=2, name='Rogue', is_dead=False))
         db.session.add(Character(id=3, name='Fighter', is_dead=False))
         db.session.commit()
+
         yield client
         db.drop_all()
 
@@ -35,11 +43,13 @@ def test_set_current_character(client):
 
 def test_current_character_no_db_no_records():
     # arrange
+    app = create_app()
     config = TestConfig()
     app.config.from_object(config)
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
+
+    with app.app_context():
+        client = app.test_client()
+        db.create_all()
 
     # act
     rv = client.get('/entry', follow_redirects=True)

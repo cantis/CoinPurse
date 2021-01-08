@@ -1,18 +1,26 @@
-""" Tests for transaction balances """ 
+""" Tests for transaction balances """
 import pytest
 
 from config import TestConfig
-from main import app, db, Entry, Character, Setting
+from app import db, create_app
+from app.entry.models import Entry, Setting
+from app.character.models import Character
 
 
-@pytest.fixture
-def client(scope='function'):
+@pytest.fixture(scope='session')
+def app():
+    app = create_app()
     config = TestConfig()
     app.config.from_object(config)
-    with app.test_client() as client:
+    return app
+
+
+@pytest.fixture(scope='function')
+def client(app):
+    with app.app_context():
         # create the database
-        with app.app_context():
-            db.create_all()
+        client = app.test_client()
+        db.create_all()
 
         # Add some Characters
         db.session.add(Character(id=1, name='Paladin', is_dead=False))
