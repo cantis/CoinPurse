@@ -4,7 +4,7 @@ Evan Young 2020
 cantis@gmail.com
 
 ## Overview
-Coin Purse is supposed to be a *virtual wallet* for my Pathfinder character recording what they spend and what they spend it on and what the current balance of their account it. 
+Coin Purse is supposed to be a *virtual wallet* for Pathfinder characters. Recording what they spend and what they spend it on and what the current balance of their account it. 
 
 This is intended as a test bench for Python Flask programming, it has an sqlite database, migrations and a configuration file.
 
@@ -53,6 +53,19 @@ Well, finally got the Docker / Docker-Compose to work i.e. run and be able to be
 the entry form. 
 Acomplished Today:
 - Customized Add Entry
+
+## 8 January 2021
+Finished a major re-orgainzation of the app just before work today. Moved the Entry and Customer code into their own modules I think that's the right Python term) and I'm now using blueprints. Added a `wsgi.py` file to start it off and just generally suffled around everything. 
+
+This triggered fixes to the tests and their fixtures that took a coupld of days to sort out. 
+
+As silly as it sounds the character and entry folders are just this plain grey in my material icons set and I'd like them to be something else, but I have no idea how to do that and I'm resisting thinking on it too hard. 
+
+The application is now built in a factory class in the app `__init__.py`. This allows the factory to be called from the `wsgi.py` or from the pytest fixtures and the factory is really simple and clean. 
+
+I am noticing that even a simple flask web application now has A LOT of files to it. 
+
+Somewhere along the line I've also broken the visual studio docker run config, want to fix that. 
 
 
 
