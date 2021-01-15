@@ -1,21 +1,26 @@
 """ Tests involved in CRUD for transaction Entries """
 import pytest
-
+from app import create_app, db
 from config import TestConfig
-from main import app, db, Entry, Character, Setting
+from app.entry.models import Entry, Setting
+from app.character.models import Character
 
 
-@pytest.fixture
-def client(scope='function'):
+@pytest.fixture(scope='session')
+def app():
+    app = create_app()
     config = TestConfig()
     app.config.from_object(config)
+    return app
 
-    with app.test_client() as client:
-        # Create the Database
-        with app.app_context():
-            db.create_all()
-        # Add some Characters
-        db.session.add(Character(id=1, name='Paladin', is_dead=False))
+
+@pytest.fixture(scope='function')
+def client(app):
+    with app.app_context():
+        client = app.test_client()
+        db.create_all()
+
+        # Add some Characters db.session.add(Character(id=1, name='Paladin', is_dead=False))
         db.session.add(Character(id=2, name='Rogue', is_dead=False))
         db.session.add(Character(id=3, name='Fighter', is_dead=False))
         db.session.commit()
@@ -28,14 +33,12 @@ def client(scope='function'):
         db.drop_all()
 
 
-@pytest.fixture
-def entry_client(scope='function'):
-    config = TestConfig()
-    app.config.from_object(config)
-    with app.test_client() as entry_client:
-        # create the database
-        with app.app_context():
-            db.create_all()
+@pytest.fixture(scope='function')
+def entry_client(app):
+
+    with app.app_context():
+        entry_client = app.test_client()
+        db.create_all()
 
         # Add some Characters
         db.session.add(Character(id=1, name='Paladin', is_dead=False))

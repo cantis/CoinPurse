@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  coinpurse:
+    image: coinpurse
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    env_file: 
+      - ./.env.dev
