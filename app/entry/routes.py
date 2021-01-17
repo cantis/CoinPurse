@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, session, request
-from app.entry.forms import AddEntryForm, EditEntryForm
-from app.entry.models import Entry, Setting
-from app.character.models import Character
+
 from app import db
+from app.entry.forms import AddEntryForm, EditEntryForm
+from app.entry.models import Entry
 from app.entry.utility import get_current_character_id, get_balance
+from app.character.models import Character
+from app.setting.utility import get_setting, save_setting
 
 entry_bp = Blueprint('entry_bp', __name__, template_folder='templates')
 
@@ -84,12 +86,11 @@ def set_current_character():
     id = request.form['selected_character']
     char = Character.query.get(id)
     if char is not None:
-        setting = Setting.query.filter_by(key='current_character').first()
+        setting = get_setting('current_character')
         if setting is not None:
             setting.value = str(char.id)
             db.session.commit()
         else:
-            db.session.add(Setting(key='current_character', value=str(char.id)))
-            db.session.commit()
+            save_setting('current_character', str(char.id))
         session['current_character'] = char.id
         return redirect(url_for('entry_bp.index'))
