@@ -20,11 +20,18 @@ def index():
     selected_name = Character.query.filter_by(id=current_id).first().name
     entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
+
     form = AddEntryForm()
     balance = get_balance()
     mode = 'add'
     if 'game_session' in session:
         form.game_session.data = session['game_session']
+    else:
+        game_session = get_setting('game_session')
+        if game_session:
+            form.game_session.data = game_session.value
+            session['game_session'] = game_session.value
+
     return render_template('index.html', mode=mode, entries=entries, form=form,
                            characters=characters, selected_name=selected_name, balance=balance)
 
@@ -45,6 +52,7 @@ def add_transaction():
 
         # Save the session for re-use
         session['game_session'] = form.game_session.data
+        save_setting('game_session', form.game_session.data)
 
     return redirect(url_for('entry_bp.index'))
 
