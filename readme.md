@@ -67,12 +67,15 @@ I am noticing that even a simple flask web application now has A LOT of files to
 
 Somewhere along the line I've also broken the visual studio docker run config, want to fix that. 
 
-## 14 Google Auth not...
+## 14 January Google Auth not...
 Giving up on the google auth at the moment, it turns out that it's a fair committment. So next up... 
 - Session 'memory' load last used session
 - Session filter so we see only one session at a time
 - Output to csv of records
-- Load csv data back in? 
+- Load csv data back in?
+
+## 17 January
+Got the settings system split out to save the session to disk and I was able to get it to load the last used session
 
 
 
