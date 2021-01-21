@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, session, reques
 from app import db
 from app.entry.forms import AddEntryForm, EditEntryForm
 from app.entry.models import Entry
-from app.entry.utility import get_current_character_id, get_balance
+from app.entry.utility import get_current_character_id, get_balance, get_game_session_list
 from app.character.models import Character
 from app.setting.utility import get_setting, save_setting
 
@@ -20,6 +20,7 @@ def index():
     selected_name = Character.query.filter_by(id=current_id).first().name
     entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
+    game_session_list = get_game_session_list(current_id)
 
     form = AddEntryForm()
     balance = get_balance()
@@ -33,7 +34,7 @@ def index():
             session['game_session'] = game_session.value
 
     return render_template('index.html', mode=mode, entries=entries, form=form,
-                           characters=characters, selected_name=selected_name, balance=balance)
+                           characters=characters, selected_name=selected_name, balance=balance, game_session_list=game_session_list)
 
 
 @entry_bp.route('/entry/add', methods=['post'])

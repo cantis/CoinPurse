@@ -33,6 +33,12 @@
         </div>
         <br>
         <div class="row col-md-offset-1 col-md-8">
+            <label for="filter_game_session">Game Sessions: </label>
+            <select name="filter_game_session">
+                {% for session in game_session_list%}
+                <option value="{{ session }}">{{ session }}</option>
+                {% endfor %}
+            </select>
             <table class="table" id="entryTable">
                 <thead>
                     <tr>
