@@ -8,37 +8,55 @@
 
 {% block content %}
     <div class="container">
-         <!-- Current Character Selector -->
-         <div class="row col-md-4">
-            <form class="form-inline" action="/current_character" method="post">
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">Current Character:</span>
-                            <select class="selectpicker form-control" name="selected_character" id="selected_character" onchange="this.form.submit()">
-                                {%for char in characters %}
-                                    {% if char.name == selected_name %}
-                                        <option value="{{char.id}}" selected>{{char.name}}</option>
-                                    {% else %}
-                                        <option value="{{char.id}}">{{char.name}}</option>
-                                    {% endif %}
-                                {% endfor%}
-                            </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <!-- Entry Table  -->
+        <!-- Page Header Table  -->
         <div class="row col-md-10">
             <h2 class="page-header">Entries</h2>
         </div>
-        <br>
+
+         <!-- Current Character Selector -->
+         <div class="row col-md-10">
+            <div class="col-md-5">
+                <form class="form-inline" action="/current_character" method="post">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">Current Character:</span>
+                            <select class="selectpicker form-control" name="selected_character" id="selected_character" onchange="this.form.submit()">
+                            {%for char in characters %}
+                                {% if char.name == selected_name %}
+                                    <option value="{{char.id}}" selected>{{char.name}}</option>
+                                {% else %}
+                                    <option value="{{char.id}}">{{char.name}}</option>
+                                {% endif %}
+                            {% endfor%}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form class="form-inline" action="/game_session" method="post">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Show Game Sessions: 
+                            </span>
+                            <select class="selectpicker form-control" name="filter_game_session" id="filter_game_session" onchange="this.form.submit()" >
+                                {% for session in game_session_list%}
+                                <option value="{{ session }}">{{ session }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row col-md-10">
+            <br>
+        </div>
+
+        <!-- Entry Table  -->
         <div class="row col-md-offset-1 col-md-8">
-            <label for="filter_game_session">Game Sessions: </label>
-            <select name="filter_game_session">
-                {% for session in game_session_list%}
-                <option value="{{ session }}">{{ session }}</option>
-                {% endfor %}
-            </select>
             <table class="table" id="entryTable">
                 <thead>
                     <tr>

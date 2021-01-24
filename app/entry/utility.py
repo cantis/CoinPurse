@@ -3,7 +3,6 @@ from app.setting.models import Setting
 from app.character.models import Character
 from app import db
 from flask import session
-from sqlalchemy import distinct
 
 
 def get_balance():

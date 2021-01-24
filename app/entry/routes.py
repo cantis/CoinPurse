@@ -67,6 +67,7 @@ def edit_entry(id):
     selected_name = Character.query.filter_by(id=current_id).first().name
     characters = Character.query.all()
     balance = get_balance()
+    game_session_list = get_game_session_list(current_id)
 
     form = EditEntryForm()
     mode = ''
@@ -86,7 +87,7 @@ def edit_entry(id):
     form.process(obj=entries)
     form.process(obj=entry)
     return render_template('index.html', form=form, mode=mode, entry=entry,
-                           entries=entries, characters=characters, selected_name=selected_name, balance=balance)
+                           entries=entries, characters=characters, selected_name=selected_name, balance=balance, game_session_list=game_session_list)
 
 
 @entry_bp.route('/current_character', methods=['post'])
