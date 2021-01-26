@@ -2,9 +2,18 @@ from app import db
 from app.setting.models import Setting
 
 
-def get_setting(setting_name):
+def get_setting(setting_name, default='none'):
+
     value = Setting.query.filter_by(key=setting_name).first()
-    return value
+
+    if value:
+        return value
+
+    if not value and default != 'none':
+        return default
+
+    if not value and default == 'none':
+        return None
 
 
 def save_setting(setting_name, value):

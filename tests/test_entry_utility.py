@@ -79,9 +79,9 @@ def test_character_game_sessions(entry_client):
 
     # assert
     assert len(result) == 3
-    assert result[0] == 1
-    assert result[1] == 2
-    assert result[2] == 3
+    assert result[0] == '1'
+    assert result[1] == '2'
+    assert result[2] == '3'
 
 
 def test_character_game_value_not_in(entry_client):
@@ -95,7 +95,7 @@ def test_character_game_value_not_in(entry_client):
 
     # assert
     assert len(result) == 2
-    assert 3 not in result
+    assert '3' not in result
 
 
 def test_confirm_all_added(entry_client):

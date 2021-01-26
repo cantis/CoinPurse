@@ -78,6 +78,17 @@ def test_create_entry_save_game_session(client):
     assert result.value == '2300'
 
 
+def test_get_a_setting_default(client):
+    """ Test that we can get a default value for a setting """
+    # arrange
+
+    # act
+    result = get_setting('warp_factor', '4')
+
+    # assert
+    assert result == '4'
+
+
 def test_index_loads_game_session(client):
     # arrange
     # set the game session

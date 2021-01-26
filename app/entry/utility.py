@@ -64,7 +64,7 @@ def get_game_session_list(character_id, no_all=False):
     # The distinct above returns a list of tupples, we need to convert that to a strait list
     # we use a lambda to map out the tupple indexes to a list
 
-    game_sessions = list(map(lambda x: x[0], games))
+    game_sessions = list(map(lambda x: str(x[0]), games))
 
     if not no_all:
         # Add an 'ALL' at the top of the list.

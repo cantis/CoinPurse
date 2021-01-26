@@ -41,8 +41,13 @@
                                 Show Game Sessions: 
                             </span>
                             <select class="selectpicker form-control" name="filter_game_session" id="filter_game_session" onchange="this.form.submit()" >
-                                {% for session in game_session_list%}
-                                <option value="{{ session }}">{{ session }}</option>
+                                {% for sess in game_session_list%}
+                                    {% if sess == selected_game_session %}
+                                        <option value="{{ sess }}" selected>{{ sess }}</option>
+                                    {% else %}
+                                        <option value="{{ sess }}">{{ sess }}</option>
+                                    {% endif %}
+
                                 {% endfor %}
                             </select>
                         </div>
