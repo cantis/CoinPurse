@@ -18,10 +18,14 @@ def index():
         return redirect(url_for('character_bp.character_list'))
 
     selected_name = Character.query.filter_by(id=current_id).first().name
-    entries = Entry.query.filter_by(character_id=current_id)
     characters = Character.query.all()
     game_session_list = get_game_session_list(current_id)
-    selected_game_session = get_setting('selected_game_session', 'All')
+    filter_game_session = get_setting('filter_game_session', 'All')
+
+    if filter_game_session == 'All':
+        entries = Entry.query.filter_by(character_id=current_id)
+    else:
+        entries = Entry.query.filter_by(character_id=current_id, game_session=filter_game_session)
 
     form = AddEntryForm()
     balance = get_balance()
@@ -36,14 +40,14 @@ def index():
 
     return render_template('index.html', mode=mode, entries=entries, form=form,
                            characters=characters, selected_name=selected_name, balance=balance,
-                           game_session_list=game_session_list, selected_game_session=selected_game_session)
+                           game_session_list=game_session_list, filter_game_session=filter_game_session)
 
 
-@entry_bp.route('/game_session', methods=['post'])
+@entry_bp.route('/filter_game_session', methods=['post'])
 def game_session():
     """ set game_session for entries """
     sess = request.form['filter_game_session']
-    save_setting('selected_game_session', sess)
+    save_setting('filter_game_session', sess)
     return redirect(url_for('entry_bp.index'))
 
 
@@ -62,7 +66,6 @@ def add_transaction():
         db.session.commit()
 
         # Save the session for re-use
-        session['game_session'] = form.game_session.data
         save_setting('game_session', form.game_session.data)
 
     return redirect(url_for('entry_bp.index'))
@@ -78,7 +81,7 @@ def edit_entry(id):
     characters = Character.query.all()
     balance = get_balance()
     game_session_list = get_game_session_list(current_id)
-    selected_game_session = get_setting('selected_game_session', 'All')
+    selected_game_session = get_setting('filter_game_session', 'All')
 
     form = EditEntryForm()
     mode = ''
@@ -116,7 +119,7 @@ def set_current_character():
         # Set the current character
         setting = get_setting('current_character')
         # re-set the game sessions id to 'All'
-        save_setting('selected_game_session', 'All') 
+        save_setting('selected_game_session', 'All')
 
         if setting is not None:
             setting.value = str(char.id)

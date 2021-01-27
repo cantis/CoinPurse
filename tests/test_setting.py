@@ -42,7 +42,7 @@ def test_get_setting(client):
     result = get_setting('test_session')
 
     # assert
-    assert result.value == '1'
+    assert result == '1'
 
 
 def test_save_setting(client):

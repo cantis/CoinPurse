@@ -34,7 +34,7 @@
                 </form>
             </div>
             <div class="col-md-4">
-                <form class="form-inline" action="/game_session" method="post">
+                <form class="form-inline" action="/filter_game_session" method="post">
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -42,7 +42,7 @@
                             </span>
                             <select class="selectpicker form-control" name="filter_game_session" id="filter_game_session" onchange="this.form.submit()" >
                                 {% for sess in game_session_list%}
-                                    {% if sess == selected_game_session %}
+                                    {% if sess == filter_game_session %}
                                         <option value="{{ sess }}" selected>{{ sess }}</option>
                                     {% else %}
                                         <option value="{{ sess }}">{{ sess }}</option>
