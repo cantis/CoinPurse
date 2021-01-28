@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, session, request
+from flask import Blueprint, render_template, redirect, url_for, request
 
 from app import db
 from app.entry.forms import AddEntryForm, EditEntryForm
@@ -30,15 +30,9 @@ def index():
     form = AddEntryForm()
     balance = get_balance()
     mode = 'add'
-    if 'game_session' in session:
-        form.game_session.data = session['game_session']
-    else:
-        game_session = get_setting('game_session')
-        if game_session:
-            form.game_session.data = game_session.value
-            session['game_session'] = game_session.value
+    game_session = get_setting('game_session')
 
-    return render_template('index.html', mode=mode, entries=entries, form=form,
+    return render_template('index.html', mode=mode, entries=entries, form=form, game_session=game_session,
                            characters=characters, selected_name=selected_name, balance=balance,
                            game_session_list=game_session_list, filter_game_session=filter_game_session)
 
@@ -116,15 +110,7 @@ def set_current_character():
     char = Character.query.get(id)
 
     if char is not None:
-        # Set the current character
-        setting = get_setting('current_character')
-        # re-set the game sessions id to 'All'
+        save_setting('current_character', str(char.id))
         save_setting('selected_game_session', 'All')
 
-        if setting is not None:
-            setting.value = str(char.id)
-            db.session.commit()
-        else:
-            save_setting('current_character', str(char.id))
-        session['current_character'] = char.id
-        return redirect(url_for('entry_bp.index'))
+    return redirect(url_for('entry_bp.index'))
