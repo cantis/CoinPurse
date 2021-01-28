@@ -77,6 +77,14 @@ Giving up on the google auth at the moment, it turns out that it's a fair commit
 ## 17 January
 Got the settings system split out to save the session to disk and I was able to get it to load the last used session
 
+## 28 January
+Added a Game Session filter, so you can look at the Entries for that session only. This also required a cleanup of the 
+settings storage. I moved the 'session' code out of the routes and other modules and it's only used in the utility. Essentially
+I use the session object as a cache if a value is in the session I return that vs. hitting the Database if it isn't I retrieve it. 
+This has required a re-work of the testing to make sure we are inside an application context that provides a session object
+to flask so this works, this has been done as well. 
+
+
 
 
 
