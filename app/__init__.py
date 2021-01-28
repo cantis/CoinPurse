@@ -8,7 +8,13 @@ bs = Bootstrap()
 db = SQLAlchemy()
 
 
+def clear_filters():
+    """ Clear any filters on the form when we re-load """
+    db.Setting.query.filter_by(key='filter_game_session').delete()
+
+
 def create_app():
+    """ Set up the flask app and initialize global objects """
     # Create the flask application
     app = Flask(__name__)
 

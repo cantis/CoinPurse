@@ -219,17 +219,18 @@ def test_entries_change_by_character(entry_client):
     # entries displayed should switch each time.
 
     # arrange
-    entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
-    # act
-    result1 = entry_client.get('/entry', follow_redirects=True)
-    # assert
-    assert b'Sword' in result1.data
-    assert b'Spear' not in result1.data
+    with entry_client.application.test_request_context('/'):
+        entry_client.post('/current_character', data=dict(selected_character=2), follow_redirects=True)
+        # act
+        result1 = entry_client.get('/entry', follow_redirects=True)
+        # assert
+        assert b'Sword' in result1.data
+        assert b'Spear' not in result1.data
 
-    # arrange
-    entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
-    # act
-    result2 = entry_client.get('/entry', follow_redirects=True)
-    # assert
-    assert b'Spear' in result2.data
-    assert b'Sword' not in result2.data
+        # arrange
+        entry_client.post('/current_character', data=dict(selected_character=3), follow_redirects=True)
+        # act
+        result2 = entry_client.get('/entry', follow_redirects=True)
+        # assert
+        assert b'Sword' not in result2.data
+        assert b'Spear' in result2.data
