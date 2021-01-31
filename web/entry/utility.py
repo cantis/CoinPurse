@@ -1,7 +1,7 @@
-from app.entry.models import Entry
-from app.setting.models import Setting
-from app.character.models import Character
-from app import db
+from web.entry.models import Entry
+from web.setting.models import Setting
+from web.character.models import Character
+from web import db
 from flask import session
 
 

@@ -1,8 +1,8 @@
 """ Tests for setting the currently selected character """
 import pytest
-from app import db, create_app
-from app.character.models import Character
-from app.setting.models import Setting
+from web import db, create_app
+from web.character.models import Character
+from web.setting.models import Setting
 from config import TestConfig
 
 

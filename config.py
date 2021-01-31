@@ -6,7 +6,7 @@ load_dotenv(path.join(basedir, '.env'))
 
 
 class BaseConfig(object):
-    FLASK_APP = 'wsgi.py'
+    FLASK_APP = 'web/wsgi.py'
     SECRET_KEY = 'super_secret_key'
 
     STATIC_FOLDER = 'static'

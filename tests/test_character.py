@@ -1,7 +1,7 @@
 """ Tests related to CRUD operations for Characters """
 import pytest
-from app import db, create_app
-from app.character.models import Character
+from web import db, create_app
+from web.character.models import Character
 from config import TestConfig
 
 

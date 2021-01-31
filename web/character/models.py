@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship
-from app import db
+from web import db
 
 
 class Character(db.Model):

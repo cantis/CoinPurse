@@ -1,4 +1,4 @@
-from app import db
+from web import db
 
 
 class Setting(db.Model):

@@ -2,11 +2,14 @@ version: '3.7'
 
 services:
   coinpurse:
-    image: coinpurse
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: .
+    image: coinpurse:latest
+    
+    # command: gunicorn --bind 0.0.0.0:5000 wsgi:app
+    # dockerfile: ./Dockerfile 
     ports:
       - 5000:5000
     env_file: 
-      - ./.env.dev
+      # - ./.env.dev
+      - FLASK_APP=web/wsgi.py
+      - FLASK_ENV=development

@@ -2,10 +2,10 @@
 import pytest
 
 from config import TestConfig
-from app import db, create_app
-from app.entry.models import Entry
-from app.setting.models import Setting
-from app.character.models import Character
+from web import db, create_app
+from web.entry.models import Entry
+from web.setting.models import Setting
+from web.character.models import Character
 
 
 @pytest.fixture(scope='session')

@@ -25,10 +25,10 @@ def create_app():
     bs.init_app(app)
     db.init_app(app)
 
-    from app.character.routes import character_bp
+    from web.character.routes import character_bp
     app.register_blueprint(character_bp)
 
-    from app.entry.routes import entry_bp
+    from web.entry.routes import entry_bp
     app.register_blueprint(entry_bp)
 
     return app
