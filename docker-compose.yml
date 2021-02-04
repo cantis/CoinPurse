@@ -5,11 +5,14 @@ services:
     build: .
     image: coinpurse:latest
     
-    # command: gunicorn --bind 0.0.0.0:5000 wsgi:app
-    # dockerfile: ./Dockerfile 
     ports:
-      - 5000:5000
-    env_file: 
+      - "5000:5000"
+
+    volumes:
+      - .:/code
+    
+      # env_file: 
       # - ./.env.dev
-      - FLASK_APP=web/wsgi.py
-      - FLASK_ENV=development
+    # environment:
+    #     - FLASK_APP=wsgi.py
+    #     - FLASK_ENV=development

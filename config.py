@@ -34,7 +34,7 @@ class DevConfig(BaseConfig):
     FLASK_DEBUG = True
     TESTING = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///./wallet.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///./web/wallet.sqlite'
 
 
 class TestConfig(BaseConfig):
