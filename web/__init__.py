@@ -29,7 +29,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from web.character.routes import character_bp
+    from web.routes.character import character_bp
     app.register_blueprint(character_bp)
 
     from web.entry.routes import entry_bp

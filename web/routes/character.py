@@ -1,5 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for
-from web.character.forms import AddCharacterForm, EditCharacterForm
+from flask_wtf import FlaskForm
+from wtforms.fields.core import BooleanField
+from wtforms.fields.simple import HiddenField
+from wtforms import StringField
+from wtforms.validators import InputRequired
+
 from web import db
 from web.models import Character
 
@@ -56,3 +61,16 @@ def add_character():
         db.session.commit()
 
     return redirect(url_for('character_bp.character_list'))
+
+
+class AddCharacterForm(FlaskForm):
+    """ Add Character Form """
+    name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
+    is_dead = BooleanField(label="Is Dead")
+
+
+class EditCharacterForm(FlaskForm):
+    """ Edit Character Form """
+    id = HiddenField()
+    name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
+    is_dead = BooleanField(label="Is Dead")
