@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 
-from app import db
-from app.entry.forms import AddEntryForm, EditEntryForm
-from app.entry.models import Entry
-from app.entry.utility import get_current_character_id, get_balance, get_game_session_list
-from app.character.models import Character
-from app.setting.utility import get_setting, save_setting
+from web import db
+from web.models import Entry, Character
+from web.entry.forms import AddEntryForm, EditEntryForm
+from web.entry.utility import get_current_character_id, get_balance, get_game_session_list
+from web.setting.utility import get_setting, save_setting
 
 entry_bp = Blueprint('entry_bp', __name__, template_folder='templates')
 

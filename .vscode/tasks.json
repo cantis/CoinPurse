@@ -20,7 +20,7 @@
 			],
 			"dockerRun": {
 				"env": {
-					"FLASK_APP": "app\\wsgi.py"
+					"FLASK_APP": "web\\wsgi.py"
 				}
 			},
 			"python": {

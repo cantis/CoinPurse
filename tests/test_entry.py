@@ -1,10 +1,8 @@
 """ Tests involved in CRUD for transaction Entries """
 import pytest
-from app import create_app, db
+from web import create_app, db
+from web.models import Entry, Setting, Character
 from config import TestConfig
-from app.entry.models import Entry
-from app.setting.models import Setting
-from app.character.models import Character
 
 
 @pytest.fixture(scope='session')
@@ -13,6 +11,16 @@ def app():
     config = TestConfig()
     app.config.from_object(config)
     return app
+
+
+@pytest.fixture(scope='function')
+def empty_client(app):
+    with app.app_context():
+        empty_client = app.test_client()
+        db.create_all()
+
+        yield empty_client
+        db.drop_all()
 
 
 @pytest.fixture(scope='function')
@@ -62,6 +70,38 @@ def entry_client(app):
 
         yield entry_client
         db.drop_all()
+
+
+def test_handle_character_no_entries(empty_client):
+    """ confirm the application can start up correctly without any characters or entries in the db """
+    # arrange
+
+    # Add some Characters
+    db.session.add(Character(id=1, name='Paladin', is_dead=False))
+    db.session.add(Character(id=2, name='Rogue', is_dead=False))
+    db.session.add(Character(id=3, name='Fighter', is_dead=False))
+    db.session.commit()
+
+    # Set the current Character
+    db.session.add(Setting(key='current_character', value='2'))
+    db.session.commit()
+
+    # act
+    result = empty_client.get('/', follow_redirects=True)
+
+    # assert
+    assert b'Entries' in result.data
+
+
+def test_handle_no_character_no_entries(empty_client):
+    """ confirm the application can start up correctly without any characters or entries in the db """
+    # arrange
+
+    # act
+    result = empty_client.get('/', follow_redirects=True)
+
+    # assert
+    assert b'Characters' in result.data
 
 
 def test_create_entry(client):

@@ -1,5 +1,5 @@
 from flask import render_template
-from main import Blueprint
+from web import Blueprint
 
 error = Blueprint('error', __name__)
 

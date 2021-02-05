@@ -1,8 +1,8 @@
 """ Tests related to CRUD operations for Characters """
 import pytest
-from app import db, create_app
-from app.character.models import Character
+from web import db, create_app
 from config import TestConfig
+from web.models import Character
 
 
 @pytest.fixture(scope='session')
@@ -11,6 +11,16 @@ def app():
     config = TestConfig()
     app.config.from_object(config)
     return app
+
+
+@pytest.fixture(scope='function')
+def empty_client(app):
+    with app.app_context():
+        empty_client = app.test_client()
+        db.create_all()
+
+        yield empty_client
+        db.drop_all()
 
 
 @pytest.fixture(scope='function')
@@ -35,6 +45,16 @@ def client_loaded(app):
 
         yield client_loaded
         db.drop_all()
+
+
+def test_handle_no_character(empty_client):
+    # arrange
+
+    # act
+    result = empty_client.get('/character', follow_redirects=True)
+
+    # assert
+    assert b'Characters' in result.data
 
 
 def test_create_character():

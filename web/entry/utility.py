@@ -1,8 +1,7 @@
-from app.entry.models import Entry
-from app.setting.models import Setting
-from app.character.models import Character
-from app import db
 from flask import session
+
+from web import db
+from web.models import Entry, Character, Setting
 
 
 def get_balance():

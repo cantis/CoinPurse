@@ -1,7 +1,7 @@
 from flask import session
 
-from app import db
-from app.setting.models import Setting
+from web import db
+from web.models import Setting
 
 
 def get_setting(setting_name, default='none'):

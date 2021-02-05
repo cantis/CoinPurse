@@ -2,10 +2,9 @@
 import pytest
 
 from config import TestConfig
-from app import db, create_app
-from app.setting.utility import get_setting, save_setting
-from app.character.models import Character
-from app.setting.models import Setting
+from web import db, create_app
+from web.models import Character, Setting
+from web.setting.utility import get_setting, save_setting
 
 
 @pytest.fixture(scope='session')
@@ -37,7 +36,7 @@ def client(app):
 
 def test_get_setting(client):
     # arrange
-    
+
     # act
     with client.application.test_request_context('/'):
         result = get_setting('test_session')

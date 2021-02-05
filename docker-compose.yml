@@ -2,11 +2,17 @@ version: '3.7'
 
 services:
   coinpurse:
-    image: coinpurse
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: .
+    image: coinpurse:latest
+    
     ports:
-      - 5000:5000
-    env_file: 
-      - ./.env.dev
+      - "5000:5000"
+
+    volumes:
+      - .:/code
+    
+    # env_file: 
+    # - ./.env.dev
+    # environment:
+    #     - FLASK_APP=wsgi.py
+    #     - FLASK_ENV=development
