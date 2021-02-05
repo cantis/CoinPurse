@@ -4,7 +4,7 @@ import pytest
 from web import create_app, db
 from web.models import Entry, Setting, Character
 from config import TestConfig
-from web.entry.utility import get_game_session_list
+from web.utility.entry import get_game_session_list
 
 
 @pytest.fixture(scope='session')
