@@ -6,6 +6,8 @@ FROM python:3.8-slim-buster
 # # Turns off buffering for easier container logging
 # ENV PYTHONUNBUFFERED=1
 
+ENV FLASK_APP="wsgi.py"
+
 RUN pip install --upgrade pip
 
 COPY . /app

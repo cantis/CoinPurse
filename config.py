@@ -6,7 +6,7 @@ load_dotenv(path.join(basedir, '.env'))
 
 
 class BaseConfig(object):
-    FLASK_APP = 'web/wsgi.py'
+    FLASK_APP = 'wsgi.py'
     SECRET_KEY = 'super_secret_key'
 
     STATIC_FOLDER = 'static'
@@ -34,7 +34,6 @@ class DevConfig(BaseConfig):
     FLASK_DEBUG = True
     TESTING = True
     DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///./web/wallet.sqlite'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../wallet.sqlite'
 
 

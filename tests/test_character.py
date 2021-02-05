@@ -14,6 +14,16 @@ def app():
 
 
 @pytest.fixture(scope='function')
+def empty_client(app):
+    with app.app_context():
+        empty_client = app.test_client()
+        db.create_all()
+
+        yield empty_client
+        db.drop_all()
+
+
+@pytest.fixture(scope='function')
 def client(app):
     with app.app_context():
         client = app.test_client()
@@ -35,6 +45,16 @@ def client_loaded(app):
 
         yield client_loaded
         db.drop_all()
+
+
+def test_handle_no_character(empty_client):
+    # arrange
+
+    # act
+    result = empty_client.get('/character', follow_redirects=True)
+
+    # assert
+    assert b'Characters' in result.data
 
 
 def test_create_character():

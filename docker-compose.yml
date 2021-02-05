@@ -11,8 +11,8 @@ services:
     volumes:
       - .:/code
     
-      # env_file: 
-      # - ./.env.dev
+    # env_file: 
+    # - ./.env.dev
     # environment:
     #     - FLASK_APP=wsgi.py
     #     - FLASK_ENV=development
