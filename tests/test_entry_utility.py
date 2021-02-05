@@ -1,11 +1,10 @@
 """ Tests involved in CRUD for transaction Entries """
 import pytest
+
 from web import create_app, db
+from web.models import Entry, Setting, Character
 from config import TestConfig
-from web.entry.models import Entry
 from web.entry.utility import get_game_session_list
-from web.setting.models import Setting
-from web.character.models import Character
 
 
 @pytest.fixture(scope='session')

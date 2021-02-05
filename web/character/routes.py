@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from web.character.forms import AddCharacterForm, EditCharacterForm
-from web.character.models import Character
 from web import db
+from web.models import Character
 
 character_bp = Blueprint('character_bp', __name__, template_folder='templates')
 

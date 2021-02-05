@@ -3,9 +3,7 @@ import pytest
 
 from config import TestConfig
 from web import db, create_app
-from web.entry.models import Entry
-from web.setting.models import Setting
-from web.character.models import Character
+from web.models import Entry, Setting, Character
 
 
 @pytest.fixture(scope='session')

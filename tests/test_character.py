@@ -1,8 +1,8 @@
 """ Tests related to CRUD operations for Characters """
 import pytest
 from web import db, create_app
-from web.character.models import Character
 from config import TestConfig
+from web.models import Character
 
 
 @pytest.fixture(scope='session')

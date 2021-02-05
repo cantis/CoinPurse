@@ -1,9 +1,8 @@
 """ Tests for setting the currently selected character """
 import pytest
 from web import db, create_app
-from web.character.models import Character
-from web.setting.models import Setting
 from config import TestConfig
+from web.models import Character, Setting
 
 
 @pytest.fixture(scope='session')

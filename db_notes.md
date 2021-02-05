@@ -21,3 +21,7 @@ following to work.
 Iniatize migrations: `$ flask db init`  
 Add a new migration: `$ flask db migrate -m "migration name"`  
 Execute migration update: `$ flask db upgrade`  
+
+*Note: If we create the datbase using the create_all then the migration process won't recognise
+the changes, the db has to be 'behind' the current state.*
+
