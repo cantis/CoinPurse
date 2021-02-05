@@ -7,8 +7,8 @@ from wtforms.validators import InputRequired
 
 from web import db
 from web.models import Entry, Character
-from web.setting.utility import get_setting, save_setting
 from web.utility.entry import get_current_character_id, get_balance, get_game_session_list
+from web.utility.setting import get_setting, save_setting
 
 entry_bp = Blueprint('entry_bp', __name__, template_folder='templates')
 
