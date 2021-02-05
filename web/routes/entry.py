@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, redirect, url_for, request
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.fields.core import FloatField, IntegerField
+from wtforms.fields.simple import HiddenField, SubmitField
+from wtforms.validators import InputRequired
 
 from web import db
 from web.models import Entry, Character
-from web.entry.forms import AddEntryForm, EditEntryForm
-from web.entry.utility import get_current_character_id, get_balance, get_game_session_list
 from web.setting.utility import get_setting, save_setting
+from web.utility.entry import get_current_character_id, get_balance, get_game_session_list
 
 entry_bp = Blueprint('entry_bp', __name__, template_folder='templates')
 
@@ -113,3 +117,21 @@ def set_current_character():
         save_setting('selected_game_session', 'All')
 
     return redirect(url_for('entry_bp.index'))
+
+
+# WTForms Definitions
+class AddEntryForm(FlaskForm):
+    """ Add Entry Form """
+    game_session = IntegerField(label='Session', validators=[InputRequired('Please provide a game session number.')])
+    description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
+    amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    submit = SubmitField('Save')
+
+
+class EditEntryForm(FlaskForm):
+    """ Edit a transaction / entry Form """
+    id = HiddenField()
+    game_session = IntegerField(label='Session', validators=[InputRequired('Please provide game session number.')])
+    description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
+    amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    submit = SubmitField('Save')
