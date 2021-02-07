@@ -26,6 +26,13 @@ def login_post():
         password = form.password.data
         remember_me = form.remember_me.data
 
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            if check_password_hash(user.password, password):
+                return redirect(url_for('entry_bp.index'))
+
+    return redirect(url_for('auth_bp.login'))
+
 
 @auth_bp.route('/signup', methods=['GET'])
 def signup():

@@ -47,8 +47,8 @@ def client(app):
         db.drop_all()
 
 
-def test_attempt_add_existing_user(client):
-    """ user Exists, we should redirect to signup """
+def test_attempt_signup_existing_user(client):
+    """ User exists, we should redirect to signup """
     # arrange
 
     # act
@@ -59,19 +59,19 @@ def test_attempt_add_existing_user(client):
     assert b'Signup' in result.data
 
 
-def test_attempt_add_missing_data(client):
-    """ missing data, we should redirect to signup """
+def test_attempt_signup_missing_data(client):
+    """ Missing data, we should redirect to signup """
     # arrange
 
     # act
-    form_data = dict(first_name='Betty', email='betty@gmail.com', password='Monday1', confirm='Monday1')    
+    form_data = dict(first_name='Betty', email='betty@gmail.com', password='Monday1', confirm='Monday1')
     result = client.post('/signup', data=form_data, follow_redirects=True)
 
     # assert
     assert b'Signup' in result.data
 
 
-def test_add_user_ok(client):
+def test_signup_ok(client):
     """ Ok user Add, redirect to login, data added """
     # arrange
 
@@ -85,8 +85,8 @@ def test_add_user_ok(client):
     assert user is not None
 
 
-def test_check_password_hash(client):
-    """ Ok user Add, redirect to login, data added """
+def test_check_signup_password_hashed(client):
+    """ Check the password has been hashed ok """
     # arrange
 
     # act
@@ -96,3 +96,41 @@ def test_check_password_hash(client):
     # assert
     user = User.query.filter_by(id=2).first()
     assert check_password_hash(user.password, b'Monday1')
+
+
+def test_login_ok(client):
+    """ Valid Login, no characters """
+    # arrange
+
+    # act
+    form_data = dict(email='adam@gmail.com', password='Monday1', remember_me=True)
+    result = client.post('/login', data=form_data, follow_redirects=True)
+
+    # assert
+    assert b'Characters' in result.data
+
+
+def test_login_invalid_password(client):
+    """ Invalid Login, bad password """
+    # arrange
+
+    # act
+    form_data = dict(email='adam@gmail.com', password='Wrong', remember_me=True)
+    result = client.post('/login', data=form_data, follow_redirects=True)
+
+    # assert
+    assert b'Login' in result.data
+
+
+def test_login_missing_email(client):
+    """ Invalid Login, missing email """
+    # arrange
+
+    # act
+    form_data = dict(email='', password='Monday1', remember_me=True)
+    result = client.post('/login', data=form_data, follow_redirects=True)
+
+    # assert
+    assert b'Login' in result.data
+
+
