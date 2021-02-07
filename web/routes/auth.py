@@ -1,25 +1,63 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_wtf import FlaskForm
+from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.fields.core import BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.fields.simple import SubmitField, PasswordField, StringField
 from wtforms.validators import InputRequired, EqualTo
 
 from web import db
+from web.models import User
 
 auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
 
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['GET'])
 def login():
     form = LoginForm()
     return render_template('login.html', form=form)
+
+
+@auth_bp.route('/login', methods=['POST'])
+def login_post():
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        remember_me = form.remember_me.data
 
 
 @auth_bp.route('/signup', methods=['GET'])
 def signup():
     form = SignupForm()
     return render_template('signup.html', form=form)
+
+
+@auth_bp.route('/signup', methods=['POST'])
+def signup_post():
+    form = SignupForm()
+    if form.validate_on_submit():
+        new_user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            password=generate_password_hash(form.password.data, method='sha256')
+        )
+
+        # check if the user exists
+        user = User.query.filter_by(email=new_user.email).first()
+        if user:
+            # user exists, go back to signup
+            return redirect(url_for('auth_bp.signup'))
+
+        # User doesn't exist add them, then to login form
+        db.session.add(new_user)
+        db.session.commit
+        return redirect(url_for('auth_bp.login'))
+
+    else:
+        # Invalid form, back to signup
+        return redirect(url_for('auth_bp.signup'))
 
 
 @auth_bp.route('/logout', methods=['GET'])
