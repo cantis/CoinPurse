@@ -20,13 +20,25 @@
     <div class="container">
         <!-- Page Header  -->
         <div class="row col-md-10">
-            <h2 class="page-heaer">Login</h2>
+            <h2 class="page-heaer">Signup</h2>
         </div>
 
-        <!-- Login Form  -->
+        <!-- Signup Form  -->
         <div class="row col-md-offset-1 col-md-9">
-            <form action="/login" class="form-horizontal"  method="post">
+            <form action="/signup" class="form-horizontal" method="post">
                 {{ form.hidden_tag()}}
+                <div class="form-group">
+                    <label for="first_name" class="col-md-3 control-label">First Name</label>
+                    <div class="col-md-4">
+                        {{form.first_name(class="form-control", placeholder="first name")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="last_name" class="col-md-3 control-label">Last Name</label>
+                    <div class="col-md-4">
+                        {{form.last_name(class="form-control", placeholder="last name")}}
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="email" class="col-md-3 control-label">Email</label>
                     <div class="col-md-4">
@@ -40,13 +52,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="remember_me" class="col-md-3 control-label">Remember Me</label>
-                    <div class="col-md-3">
-                        {{form.remember_me(class="checkbox")}}
+                    <label for="confirm" class="col-md-3 control-label">Confirm Password</label>
+                    <div class="col-md-4">
+                        {{form.confirm(class="form-control", placeholder="confirm password")}}
                     </div>
                 </div>
-                <div class="col-md-offset-6">
-                    <a href="/signup" class="btn btn-secondary" role="button">Sign Up</a>
+                <div class="col-md-offset-7">
                     {{form.submit(class="btn btn-primary")}}
                 </div>
             </form>
