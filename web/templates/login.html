@@ -1,0 +1,55 @@
+{% extends "layout/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+{% endblock styles%}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand">Coin Purse</a>
+            </div>
+        </div>
+    </nav>
+{% endblock navbar %} 
+
+{% block content %}
+    <div class="container">
+        <!-- Page Header  -->
+        <div class="row col-md-10">
+            <h2 class="page-heaer">Login</h2>
+        </div>
+
+        <!-- Login Form  -->
+        <div class="row col-md-offset-1 col-md-9">
+            <form action="/login" class="form-horizontal"  method="post">
+                {{ form.hidden_tag()}}
+                <div class="row form_group">
+                    <label for="email" class="col-md-3 control-label">Email</label>
+                    <div class="col-md-2">
+                        {{form.email(class="form-control", placeholder="Email")}}
+                    </div>
+                </div>
+                <div class="row"><br></div>
+                <div class="row form-group">
+                    <label for="password" class="col-md-3 control-label">Password</label>
+                    <div class="col-md-4">
+                        {{form.password(class="form-control", placeholder="Password")}}
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label for="remember_me" class="col-md-3 control-label">Remember Me</label>
+                    <div class="col-md-3">
+                        {{form.remember_me(class="checkbox")}}
+                    </div>
+                </div>
+                <div class="col-md-offset-6">
+                    {{form.submit(class="btn btn-primary")}}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

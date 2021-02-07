@@ -35,4 +35,7 @@ def create_app():
     from web.routes.entry import entry_bp
     app.register_blueprint(entry_bp)
 
+    from web.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)
+
     return app
