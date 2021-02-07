@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from config import DevConfig
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-# from os import path
+from flask_sqlalchemy import SQLAlchemy
+from flask_toastr import Toastr
+
+from config import DevConfig
+
 
 # create global objects
 bs = Bootstrap()
 db = SQLAlchemy()
 migrate = Migrate()
+toastr = Toastr()
 
 
 def clear_filters():
@@ -28,6 +31,7 @@ def create_app():
     bs.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    toastr.init_app(app)
 
     from web.routes.character import character_bp
     app.register_blueprint(character_bp)

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.fields.core import BooleanField
@@ -28,6 +28,7 @@ def login_post():
 
         user = User.query.filter_by(email=email).first()
         if not user or not check_password_hash(user.password, password):
+            flash("User not found or bad password.", "error")
             return redirect(url_for('auth_bp.login'))
         else:
             return redirect(url_for('entry_bp.index'))
@@ -56,11 +57,13 @@ def signup_post():
         user = User.query.filter_by(email=new_user.email).first()
         if user:
             # user exists, go back to signup
+            flash('email already exists', 'warning')
             return redirect(url_for('auth_bp.signup'))
 
         # User doesn't exist add them, then to login form
         db.session.add(new_user)
-        db.session.commit
+        db.session.commit()
+        flash('User added, please login', 'success')
         return redirect(url_for('auth_bp.login'))
 
     else:
