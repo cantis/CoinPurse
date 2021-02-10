@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request
+from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.fields.core import FloatField, IntegerField
@@ -15,6 +16,7 @@ entry_bp = Blueprint('entry_bp', __name__, template_folder='templates')
 
 @entry_bp.route('/', methods=['GET'])
 @entry_bp.route('/entry', methods=['GET'])
+@login_required
 def index():
     current_id = get_current_character_id()
     if current_id is None:
@@ -41,10 +43,12 @@ def index():
 
     return render_template('index.html', mode=mode, entries=entries, form=form, game_session=game_session,
                            characters=characters, selected_name=selected_name, balance=balance,
-                           game_session_list=game_session_list, filter_game_session=filter_game_session)
+                           game_session_list=game_session_list, filter_game_session=filter_game_session,
+                           current_user=current_user)
 
 
 @entry_bp.route('/filter_game_session', methods=['post'])
+@login_required
 def game_session():
     """ set game_session for entries """
     sess = request.form['filter_game_session']
@@ -53,6 +57,7 @@ def game_session():
 
 
 @entry_bp.route('/entry/add', methods=['post'])
+@login_required
 def add_transaction():
     """ Handle adding a new transaction """
     form = AddEntryForm()
@@ -73,6 +78,7 @@ def add_transaction():
 
 
 @entry_bp.route('/entry/<id>', methods=['get', 'post'])
+@login_required
 def edit_entry(id):
     """ Handle editing an existing entry """
     entry = Entry.query.get(id)
@@ -107,6 +113,7 @@ def edit_entry(id):
 
 
 @entry_bp.route('/current_character', methods=['post'])
+@login_required
 def set_current_character():
     """ handle setting the current character """
 
