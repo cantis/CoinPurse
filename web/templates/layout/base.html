@@ -2,6 +2,9 @@
 
 {% block head %}
   <link rel="shortcut icon" href="#"> <!-- Suppresses favicon error -->
+  {{ toastr.include_jquery() }}
+  {{ toastr.include_toastr_css() }}
+  {{ toastr.message() }}
   {{ super() }}
 {% endblock head %}
   
@@ -19,5 +22,6 @@
 
 {% block body %}
   {{ super() }} 
+  {{ toastr.include_toastr_js() }}
   {% include "layout/footer.html" %}
 {% endblock body %}

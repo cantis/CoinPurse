@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms.fields.core import BooleanField
 from wtforms.fields.simple import HiddenField
@@ -12,6 +13,7 @@ character_bp = Blueprint('character_bp', __name__, template_folder='templates')
 
 
 @character_bp.route('/character', methods=['get'])
+@login_required
 def character_list():
     """ charactersshow character list """
     characters = Character.query.all()
@@ -22,6 +24,7 @@ def character_list():
 
 
 @character_bp.route('/character/<id>', methods=['get', 'post'])
+@login_required
 def edit_character(id):
     """ Handle editing an existing Character """
     # The single character we are editing
@@ -49,6 +52,7 @@ def edit_character(id):
 
 
 @character_bp.route('/character/add', methods=['post'])
+@login_required
 def add_character():
     """ Handle adding a new Character """
     form = AddCharacterForm()
