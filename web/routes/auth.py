@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user
+from flask_login.utils import logout_user
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.fields.core import BooleanField
@@ -73,9 +74,10 @@ def signup_post():
         return redirect(url_for('auth_bp.signup'))
 
 
-@auth_bp.route('/logout', methods=['GET'])
+@auth_bp.route('/Logout', methods=['GET', 'POST'])
 def logout():
-    return 'Logout'
+    logout_user()
+    return redirect(url_for('auth_bp.login'))
 
 
 @auth_bp.route('/profile', methods=['GET'])
