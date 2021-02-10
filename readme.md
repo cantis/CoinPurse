@@ -85,6 +85,11 @@ to flask so this works, this has been done as well.
 ## 5 February
 Some significant progress, did a re-factor and moved to a functional application structure model. Moved the `wsgi.py` file to the root of the project and re-factored the links. That got the docker setup working. Fixed the database creation code so the dabase now builds a new datbase properly, see the db_notes for instructions on how to create the datbase. Next up is reporting using the google sheets API. 
 
+## 9 February
+Well, after a fight, got the Flask_Login working. You'll want to pay attenton to where the parts of this are actually configured. The examples showed the LoginManager - UserLoader being configured in the application factory `__init__.py`. In this case I set up the auth blueprint in the factory but the rest is done in the User Model. I was gettign all kinds of metadata errors and ALL of the tests jammed. The re-configuration as I have it now works. 
+
+
+
 
 
 

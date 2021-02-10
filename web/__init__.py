@@ -18,7 +18,7 @@ login_manager = LoginManager()
 
 def clear_filters():
     """ Clear any filters on the form when we re-load """
-    # db.Setting.query.filter_by(key='filter_game_session').delete()
+    db.Setting.query.filter_by(key='filter_game_session').delete()
 
 
 def create_app():

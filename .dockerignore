@@ -5,6 +5,7 @@ coverage/
 migrations/
 tests/
 venv/
+env/
 .flake8
 .gitignore
 docker-compose.yml

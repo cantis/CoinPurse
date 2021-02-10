@@ -20,7 +20,7 @@ def character_list():
     form = AddCharacterForm()
     form.process(obj=characters)
     form.name(class_='col-md-4')
-    return render_template('character.html', characters=characters, form=form, mode='add')
+    return render_template('character.html', characters=characters, form=form, mode='add', current_user=current_user)
 
 
 @character_bp.route('/character/<id>', methods=['get', 'post'])
@@ -48,7 +48,7 @@ def edit_character(id):
 
     form.process(obj=characters)
     form.process(obj=character)
-    return render_template('character.html', characters=characters, character=character, form=form, mode=mode)
+    return render_template('character.html', characters=characters, character=character, form=form, mode=mode, current_user=current_user)
 
 
 @character_bp.route('/character/add', methods=['post'])
