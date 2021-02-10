@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
+from flask_login import login_user
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.fields.core import BooleanField
@@ -31,6 +32,7 @@ def login_post():
             flash("User not found or bad password.", "error")
             return redirect(url_for('auth_bp.login'))
         else:
+            login_user(user, remember=remember_me)
             return redirect(url_for('entry_bp.index'))
 
     return redirect(url_for('auth_bp.login'))
