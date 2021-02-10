@@ -20,7 +20,11 @@ def index():
     if current_id is None:
         return redirect(url_for('character_bp.character_list'))
 
-    selected_name = Character.query.filter_by(id=current_id).first().name
+    selected_character = Character.query.filter_by(id=current_id).first()
+    if selected_character:
+        selected_name = selected_character.name
+    else:
+        selected_name = ''
     characters = Character.query.all()
     game_session_list = get_game_session_list(current_id)
     filter_game_session = get_setting('filter_game_session', 'All')

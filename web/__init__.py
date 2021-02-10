@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_toastr import Toastr
@@ -12,6 +13,7 @@ bs = Bootstrap()
 db = SQLAlchemy()
 migrate = Migrate()
 toastr = Toastr()
+login_manager = LoginManager()
 
 
 def clear_filters():
@@ -32,6 +34,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     toastr.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth_bp.login'
 
     from web.routes.character import character_bp
     app.register_blueprint(character_bp)
