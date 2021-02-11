@@ -23,6 +23,7 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     is_dead = db.Column(db.Boolean, default=False)
+    user_id = Column(Integer, ForeignKey('Users.id'))
     entries = relationship('Entry', backref='character')
 
 
@@ -44,6 +45,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    characters = relationship('User', backref='user')
 
     @login_manager.user_loader
     def load_user(id):
