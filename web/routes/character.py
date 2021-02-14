@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms.fields.core import BooleanField
+from wtforms.fields.core import BooleanField, IntegerField
 from wtforms.fields.simple import HiddenField
 from wtforms import StringField
 from wtforms.validators import InputRequired
@@ -59,7 +59,8 @@ def add_character():
     if form.validate_on_submit():
         new_character = Character(
             name=form.name.data,
-            is_dead=form.is_dead.data
+            is_dead=form.is_dead.data,
+            user_id=form.user_id.data
             )
         db.session.add(new_character)
         db.session.commit()
@@ -71,6 +72,7 @@ class AddCharacterForm(FlaskForm):
     """ Add Character Form """
     name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
     is_dead = BooleanField(label="Is Dead")
+    user_id = IntegerField(label="User")
 
 
 class EditCharacterForm(FlaskForm):

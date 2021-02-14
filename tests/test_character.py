@@ -2,7 +2,7 @@
 import pytest
 from web import db, create_app
 from config import TestConfig
-from web.models import Character
+from web.models import Character, User
 
 
 @pytest.fixture(scope='session')
@@ -29,6 +29,12 @@ def client(app):
         client = app.test_client()
         db.create_all()
 
+        try:
+            db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password='Monday1'))
+            db.session.commit()
+        except Exception as e:
+            print(e.message)
+
         yield client
         db.drop_all()
 
@@ -39,9 +45,13 @@ def client_loaded(app):
         client_loaded = app.test_client()
         db.create_all()
 
-        db.session.add(Character(id=1, name='Paladin', is_dead=False))
-        db.session.add(Character(id=2, name='Rogue', is_dead=False))
-        db.session.add(Character(id=3, name='Fighter', is_dead=False))
+        db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password='Monday1'))
+        db.session.commit()
+
+        db.session.add(Character(id=1, name='Paladin', is_dead=False, user_id=1))
+        db.session.add(Character(id=2, name='Rogue', is_dead=False, user_id=1))
+        db.session.add(Character(id=3, name='Fighter', is_dead=False, user_id=1))
+        db.session.commit()
 
         yield client_loaded
         db.drop_all()
@@ -82,7 +92,7 @@ def test_add_character(client):
     # arrange
 
     # act
-    client.post('/character/add', data=dict(name='Rogue', is_dead=False), follow_redirects=True)
+    client.post('/character/add', data=dict(name='Rogue', is_dead=False, user_id=1), follow_redirects=True)
 
     # assert
     char = Character.query.get(1)
