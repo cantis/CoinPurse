@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms.fields.core import BooleanField
+from wtforms.fields.core import BooleanField, IntegerField
 from wtforms.fields.simple import HiddenField
 from wtforms import StringField
 from wtforms.validators import InputRequired
@@ -17,6 +17,7 @@ character_bp = Blueprint('character_bp', __name__, template_folder='templates')
 def character_list():
     """ charactersshow character list """
     characters = Character.query.all()
+    characters = Character.query.filter_by(user_id=current_user.id)
     form = AddCharacterForm()
     form.process(obj=characters)
     form.name(class_='col-md-4')
@@ -59,7 +60,8 @@ def add_character():
     if form.validate_on_submit():
         new_character = Character(
             name=form.name.data,
-            is_dead=form.is_dead.data
+            is_dead=form.is_dead.data,
+            user_id=current_user.id
             )
         db.session.add(new_character)
         db.session.commit()

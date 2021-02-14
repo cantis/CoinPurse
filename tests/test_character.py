@@ -1,8 +1,10 @@
 """ Tests related to CRUD operations for Characters """
 import pytest
+from werkzeug.security import generate_password_hash
+
 from web import db, create_app
 from config import TestConfig
-from web.models import Character
+from web.models import Character, User
 
 
 @pytest.fixture(scope='session')
@@ -29,6 +31,13 @@ def client(app):
         client = app.test_client()
         db.create_all()
 
+        password = generate_password_hash('Monday1')
+        db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password=password))
+        db.session.commit()
+
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
+        client.post('/login', data=data)
+
         yield client
         db.drop_all()
 
@@ -39,50 +48,60 @@ def client_loaded(app):
         client_loaded = app.test_client()
         db.create_all()
 
-        db.session.add(Character(id=1, name='Paladin', is_dead=False))
-        db.session.add(Character(id=2, name='Rogue', is_dead=False))
-        db.session.add(Character(id=3, name='Fighter', is_dead=False))
+        password = generate_password_hash('Monday1')
+        db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password=password))
+        db.session.add(User(id=2, first_name='John', last_name='Smith', email='john@smith.com', password=password))
+        db.session.commit()
+
+        db.session.add(Character(id=1, name='Paladin', is_dead=False, user_id=1))
+        db.session.add(Character(id=2, name='Rogue', is_dead=False, user_id=1))
+        db.session.add(Character(id=3, name='Fighter', is_dead=False, user_id=2))
+        db.session.commit()
+
+        data = dict(email='john@smith.com', password='Monday1', remember_me=False)
+        client_loaded.post('/login', data=data)
 
         yield client_loaded
         db.drop_all()
 
 
-def test_handle_no_character(empty_client):
+def test_get_characters_for_user(client_loaded):
+    """ Get characters for logged in user """
     # arrange
 
     # act
-    result = empty_client.get('/character', follow_redirects=True)
+    result = client_loaded.get('/character', follow_redirects=True)
+
+    # assert
+    assert b'Fighter' in result.data
+    assert b'Rogue' not in result.data
+
+
+def test_handle_no_character(client):
+    # arrange
+
+    # act
+    result = client.get('/character', follow_redirects=True)
 
     # assert
     assert b'Characters' in result.data
-
-
-def test_create_character():
-    # arrange
-    char = Character()
-
-    # act
-    char.name = 'test'
-
-    # assert
-    assert char.name == 'test'
 
 
 def test_get_character_list(client):
     # arrange
 
     # act
-    rv = client.get('/character')
+    result = client.get('/character')
 
     # assert
-    assert b'Add Character' in rv.data
+    assert b'Add Character' in result.data
 
 
 def test_add_character(client):
     # arrange
 
     # act
-    client.post('/character/add', data=dict(name='Rogue', is_dead=False), follow_redirects=True)
+    client.post('/character/add', data=dict(name='Rogue', is_dead=False, user_id=1), follow_redirects=True)
 
     # assert
     char = Character.query.get(1)
@@ -94,10 +113,10 @@ def test_check_character_listed(client):
     # arrange
 
     # act
-    rv = client.post('/character/add', data=dict(name='Ranger', is_dead=False), follow_redirects=True)
+    result = client.post('/character/add', data=dict(name='Ranger', is_dead=False), follow_redirects=True)
 
     # asert
-    assert b'Ranger' in rv.data
+    assert b'Ranger' in result.data
 
 
 def test_edit_character_ok(client_loaded):

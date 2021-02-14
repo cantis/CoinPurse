@@ -24,7 +24,7 @@ def login():
 def login_post():
     form = LoginForm()
     if form.validate_on_submit():
-        email = form.email.data
+        email = form.email.data.lower()
         password = form.password.data
         remember_me = form.remember_me.data
 
