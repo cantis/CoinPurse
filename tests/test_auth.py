@@ -47,6 +47,31 @@ def client(app):
         db.drop_all()
 
 
+def test_capitals_in_signup(client):
+    """ capitals in password should be lowercased """
+    # arrange
+
+    # act
+    form_data = dict(first_name='Test', last_name='User', email='Someone@Gmail.com', password='Monday1', confirm='Monday1')
+    client.post('/signup', data=form_data, follow_redirects=True)
+
+    # assert
+    user = User.query.filter_by(email='someone@gmail.com')
+    assert user is not None
+
+
+def test_capitals_in_login(client):
+    """ user has capitals in login email """
+    # arrange
+
+    # act
+    form_data = dict(email='Adam@Gmail.com', password='Monday1', remember_me=True)
+    result = client.post('/login', data=form_data, follow_redirects=True)
+
+    # assert
+    assert b'Characters' in result.data
+
+
 def test_attempt_signup_existing_user(client):
     """ User exists, we should redirect to signup """
     # arrange
