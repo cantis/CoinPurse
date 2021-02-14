@@ -1,8 +1,9 @@
 """ Tests for setting the currently selected character """
 import pytest
 from web import db, create_app
+from werkzeug.security import generate_password_hash
 from config import TestConfig
-from web.models import Character, Setting
+from web.models import Character, Setting, User
 
 
 @pytest.fixture(scope='session')
@@ -11,6 +12,23 @@ def app():
     config = TestConfig()
     app.config.from_object(config)
     return app
+
+
+@pytest.fixture(scope='function')
+def empty_client(app):
+    with app.app_context():
+        empty_client = app.test_client()
+        db.create_all()
+
+        password = generate_password_hash('Monday1')
+        db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password=password))
+        db.session.commit()
+
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
+        empty_client.post('/login', data=data)
+
+        yield empty_client
+        db.drop_all()
 
 
 @pytest.fixture(scope='function')
@@ -40,18 +58,11 @@ def test_set_current_character(client):
     assert rv.status_code == 200
 
 
-def test_current_character_no_db_no_records():
+def test_current_character_no_db_no_records(empty_client):
     # arrange
-    app = create_app()
-    config = TestConfig()
-    app.config.from_object(config)
-
-    with app.app_context():
-        client = app.test_client()
-        db.create_all()
 
     # act
-    rv = client.get('/entry', follow_redirects=True)
+    rv = empty_client.get('/entry', follow_redirects=True)
 
     # assert
     assert b'Characters' in rv.data

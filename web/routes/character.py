@@ -17,6 +17,7 @@ character_bp = Blueprint('character_bp', __name__, template_folder='templates')
 def character_list():
     """ charactersshow character list """
     characters = Character.query.all()
+    characters = Character.query.filter_by(user_id=current_user.id)
     form = AddCharacterForm()
     form.process(obj=characters)
     form.name(class_='col-md-4')
@@ -60,7 +61,7 @@ def add_character():
         new_character = Character(
             name=form.name.data,
             is_dead=form.is_dead.data,
-            user_id=form.user_id.data
+            user_id=current_user.id
             )
         db.session.add(new_character)
         db.session.commit()

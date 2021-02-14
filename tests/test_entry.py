@@ -1,7 +1,9 @@
 """ Tests involved in CRUD for transaction Entries """
 import pytest
+from werkzeug.security import generate_password_hash
+
 from web import create_app, db
-from web.models import Entry, Setting, Character
+from web.models import Entry, Setting, Character, User
 from config import TestConfig
 
 
@@ -18,6 +20,13 @@ def empty_client(app):
     with app.app_context():
         empty_client = app.test_client()
         db.create_all()
+
+        password = generate_password_hash('Monday1')
+        db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password=password))
+        db.session.commit()
+
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
+        empty_client.post('/login', data=data)
 
         yield empty_client
         db.drop_all()
