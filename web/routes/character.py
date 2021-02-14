@@ -73,7 +73,6 @@ class AddCharacterForm(FlaskForm):
     """ Add Character Form """
     name = StringField(label="Character", validators=[InputRequired('Please provide a character name')])
     is_dead = BooleanField(label="Is Dead")
-    user_id = IntegerField(label="User")
 
 
 class EditCharacterForm(FlaskForm):
