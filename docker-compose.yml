@@ -9,7 +9,11 @@ services:
       - "5000:5000"
 
     volumes:
-      - .:/code
+      # - .:/code
+      - data:/data 
+
+volumes:
+  data:
     
     # env_file: 
     # - ./.env.dev
