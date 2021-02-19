@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  coinpurse:
+  web:
     build: .
     image: coinpurse:latest
     
@@ -9,7 +9,7 @@ services:
       - "5000:5000"
 
     volumes:      
-      - data:/data 
+      - .:/data 
     
     env_file: 
       - ./.env.dev
@@ -19,3 +19,4 @@ services:
 
 volumes:
   data:
+    driver: local
