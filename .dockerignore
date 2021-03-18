@@ -10,5 +10,4 @@ env/
 docker-compose.yml
 Dockerfile
 *.md
-
-
+data/
