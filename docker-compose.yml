@@ -12,6 +12,9 @@ services:
       - type: bind
         source: ./data
         target: /app/data
+      - type: bind
+        source: ./web
+        target: /app/web
     
     env_file: 
       - ./.env.dev

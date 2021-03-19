@@ -88,7 +88,10 @@ Some significant progress, did a re-factor and moved to a functional application
 ## 9 February
 Well, after a fight, got the Flask_Login working. You'll want to pay attenton to where the parts of this are actually configured. The examples showed the LoginManager - UserLoader being configured in the application factory `__init__.py`. In this case I set up the auth blueprint in the factory but the rest is done in the User Model. I was gettign all kinds of metadata errors and ALL of the tests jammed. The re-configuration as I have it now works. 
 
+## 18 March
+Finally got my docker bind mount working! The VSCode Docker extension is really good for providing the ability to drill in to a running container and see it's structure. Once I could see into the container I was able to adjust where the folder was being created. 
 
+Interestingly, no docker volume is actually created for the bind mount it just creates what looks like a normal folder and the app running in the container can see it. Oh, importantly, I have to block the folder from being created as part of the image in the .dockerignore 
 
 
 
