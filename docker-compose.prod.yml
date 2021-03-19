@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    image: coinpurse:latest
+    
+    expose:
+      - 5000
+
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data
+    
+    env_file: 
+      - ./.env.prod
+
+    command:
+      gunicorn --bind 0.0.0.0:5000 wsgi:app
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on: 
+      - web
