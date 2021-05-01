@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -5,7 +6,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_toastr import Toastr
 
-from config import DevConfig
+from config import DevConfig, ProdConfig
 
 
 # create global objects
@@ -26,8 +27,13 @@ def create_app():
     # Create the flask application
     app = Flask(__name__)
 
-    # set the configuration
-    app.config.from_object(DevConfig())
+    environment = os.getenv('ENV')
+
+    if environment == 'debug':
+        app.config.from_object(DevConfig())
+
+    if environment == 'prod':
+        app.config.from_object(ProdConfig())
 
     # initalize our globlal objects
     bs.init_app(app)

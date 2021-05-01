@@ -10,7 +10,8 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_DEBUG": "1"
+                "ENV": "debug"
+
             },
             "args": [
                 "run"

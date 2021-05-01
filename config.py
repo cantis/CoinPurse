@@ -7,7 +7,7 @@ load_dotenv(path.join(basedir, '.env'))
 
 class BaseConfig(object):
     FLASK_APP = 'wsgi.py'
-    SECRET_KEY = 'super_secret_key'
+    SECRET_KEY = environ.get('SECRET_KEY')
 
     STATIC_FOLDER = 'static'
     TEMPLATE_FOLDER = 'templates'
@@ -22,23 +22,19 @@ class BaseConfig(object):
 
 
 class ProdConfig(BaseConfig):
-    ENV = 'production'
     FLASK_ENV = 'production'
-    SQLALCHEMY_DATABASE_URI = environ.get('PROD_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = environ.get('POSTGRES_DATABASE_URI')
 
 
 class DevConfig(BaseConfig):
-    """ Development Configuration """
-    ENV = 'development'
     FLASK_ENV = 'development'
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     FLASK_DEBUG = True
     TESTING = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../data/wallet.sqlite'
 
 
 class TestConfig(BaseConfig):
-    """ Testing Configuration """
     ENV = 'testing'
     FLASK_ENV = 'testing'
     FLASK_DEBUG = True
