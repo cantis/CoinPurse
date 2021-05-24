@@ -42,6 +42,7 @@ def save_setting(setting_name, value):
     session[setting_name] = value
 
 
-def clear_setting(setting_name, value):
-    db.Setting.query.filter_by(key=setting_name).delete()
-    session.pop(setting_name)
+def clear_setting_cache():
+    ''' Clear values in the session, call this as the user logs in to clear any previous session data. '''
+    for key in list(session.keys()):
+        session.pop(key)

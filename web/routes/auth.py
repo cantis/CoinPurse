@@ -1,3 +1,4 @@
+from web.utility.setting import clear_setting_cache
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user
 from flask_login.utils import logout_user
@@ -10,6 +11,7 @@ from wtforms.validators import InputRequired, EqualTo
 
 from web import db
 from web.models import User
+
 
 auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
 
@@ -33,6 +35,7 @@ def login_post():
             flash("User not found or bad password.", "error")
             return redirect(url_for('auth_bp.login'))
         else:
+            clear_setting_cache()
             login_user(user, remember=remember_me)
             return redirect(url_for('entry_bp.index'))
 

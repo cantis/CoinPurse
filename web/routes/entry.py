@@ -62,14 +62,25 @@ def add_transaction():
     """ Handle adding a new transaction """
     form = AddEntryForm()
     if form.validate_on_submit():
+
+        # get the value of the transaction, set to negative for withdrawl (i.e. purchase)
+        entry_type = request.form['entry_type']
+        if entry_type == 'withdrawl':
+            amount = -form.amount.data
+        if entry_type == 'deposit':
+            amount = form.amount.data
+
         new_entry = Entry(
             game_session=form.game_session.data,
             description=form.description.data,
-            amount=form.amount.data,
+            amount=amount,
             character_id=get_current_character_id()
             )
         db.session.add(new_entry)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as ex:
+            print(ex)
 
         # Save the session for re-use
         save_setting('game_session', form.game_session.data)
@@ -97,19 +108,31 @@ def edit_entry(id):
         entry.id = int(form.id.data)
         entry.game_session = form.game_session.data
         entry.description = form.description.data
-        entry.amount = float(form.amount.data)
+        amount = float(form.amount.data)
+
+        entry_type = request.form['entry_type']
+        if entry_type == 'withdrawl':
+            amount = -amount
+        entry.amount = amount
+
         db.session.commit()
         form = AddEntryForm()
         entry = None
         mode = 'add'
     else:
         mode = 'edit'
+        # if it's a negative number it's a withdrawl, positive is a deposit.
+        if entry.amount > 0:
+            entry_type = 'deposit'
+        else:
+            entry_type = 'withdrawl'
+        entry.amount = abs(entry.amount)
 
     form.process(obj=entries)
     form.process(obj=entry)
     return render_template('index.html', form=form, mode=mode, entry=entry,
                            entries=entries, characters=characters, selected_name=selected_name, balance=balance,
-                           game_session_list=game_session_list, selected_game_session=selected_game_session)
+                           game_session_list=game_session_list, selected_game_session=selected_game_session, entry_type=entry_type)
 
 
 @entry_bp.route('/current_character', methods=['post'])

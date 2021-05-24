@@ -8,6 +8,8 @@ from flask_toastr import Toastr
 
 from config import DevConfig, ProdConfig
 
+# For gunicorn / nginx config
+# https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
 
 # create global objects
 bs = Bootstrap()
@@ -27,7 +29,8 @@ def create_app():
     # Create the flask application
     app = Flask(__name__)
 
-    environment = os.getenv('ENV')
+    # The ENV environment variable is set in the launch.json file and we default here to production.
+    environment = os.getenv('ENV', 'prod')
 
     if environment == 'debug':
         app.config.from_object(DevConfig())
