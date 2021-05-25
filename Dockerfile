@@ -8,6 +8,8 @@ ENV PYTHONUNBUFFERED=1
 
 ENV FLASK_APP="wsgi.py"
 
+ENV ENV="prod"
+
 RUN pip install --upgrade pip
 
 COPY . /app
