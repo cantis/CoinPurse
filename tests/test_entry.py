@@ -117,7 +117,7 @@ def test_create_entry(client):
     # arrange
 
     # act
-    result = client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    result = client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02, entry_type='withdrawl'), follow_redirects=True)
 
     # assert
     assert b'Wand of Heal' in result.data
@@ -129,7 +129,7 @@ def test_create_entry_check_game_session(client):
     # arrange
 
     # act
-    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02, entry_type='withdrawl'), follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
@@ -140,7 +140,7 @@ def test_create_entry_check_description(client):
     # arrange
 
     # act
-    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02, entry_type='withdrawl'), follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
@@ -151,25 +151,26 @@ def test_create_entry_check_amount(client):
     # arrange
 
     # act
-    client.post('/entry/add', data=dict(game_session=1, description='Wand of Heal', amount=10.02), follow_redirects=True)
+    data = dict(game_session=1, description='Wand of Heal', amount=10.02, entry_type='withdrawl')
+    client.post('/entry/add', data=data, follow_redirects=True)
 
     # assert
     result = Entry.query.filter_by(description='Wand of Heal').first()
-    assert result.amount == 10.02
+    assert result.amount == -10.02
 
 
 def test_edit_entry_description(entry_client):
     # arrange
 
     # act
-    data = dict(id=2, game_session=1, description='Flail', amount=20.00)
+    data = dict(id=2, game_session=1, description='Flail', amount=20.00, entry_type='withdrawl')
     result = entry_client.post('/entry/2', data=data, follow_redirects=True)
 
     # assert
     entry = Entry.query.get(2)
     assert entry.game_session == 1
     assert entry.description == 'Flail'
-    assert entry.amount == 20.00
+    assert entry.amount == -20.00
     assert b'Add Entry' in result.data
 
 
@@ -177,14 +178,14 @@ def test_edit_entry_session(entry_client):
     # arrange
 
     # act
-    data = dict(id=2, game_session=5, description='Sword', amount=20.00)
+    data = dict(id=2, game_session=5, description='Sword', amount=20.00, entry_type='withdrawl')
     result = entry_client.post('/entry/2', data=data, follow_redirects=True)
 
     # assert
     entry = Entry.query.get(2)
     assert entry.game_session == 5
     assert entry.description == 'Sword'
-    assert entry.amount == 20.00
+    assert entry.amount == -20.00
     assert b'Add Entry' in result.data
 
 
@@ -192,22 +193,23 @@ def test_edit_entry_amount(entry_client):
     # arrange
 
     # act
-    data = dict(id=2, game_session=1, description='Sword', amount=24.00)
+    data = dict(id=2, game_session=1, description='Sword', amount=24.00, entry_type='withdrawl')
     result = entry_client.post('/entry/2', data=data, follow_redirects=True)
 
     # assert
     entry = Entry.query.get(2)
     assert entry.game_session == 1
     assert entry.description == 'Sword'
-    assert entry.amount == 24.00
+    assert entry.amount == -24.00
     assert b'Add Entry' in result.data
 
 
-def test_edit_entry(client):
+def test_edit_entry(entry_client):
+    ''' Test recalling an item to edit, the get of the form.'''
     # arrange
 
     # act
-    result = client.post('/entry/2')
+    result = entry_client.post('/entry/2', follow_redirects=True)
 
     # assert
     assert b'Edit' in result.data
@@ -237,7 +239,8 @@ def test_create_entry_check_displayed_game_session(client):
     # arrange
 
     # act
-    result = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    data = dict(game_session=567, description='Wand of Heal', amount=45.89, entry_type='withdrawl')
+    result = client.post('/entry/add', data=data, follow_redirects=True)
 
     # assert
     assert b'567' in result.data
@@ -247,7 +250,8 @@ def test_create_entry_check_displayed_description(client):
     # arrange
 
     # act
-    result = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    data = dict(game_session=567, description='Wand of Heal', amount=45.89, entry_type='withdrawl')
+    result = client.post('/entry/add', data=data, follow_redirects=True)
 
     # assert
     assert b'Wand of Heal' in result.data
@@ -257,7 +261,8 @@ def test_create_entry_check_displayed_amount(client):
     # arrange
 
     # act
-    result = client.post('/entry/add', data=dict(game_session=567, description='Wand of Heal', amount=45.89), follow_redirects=True)
+    data = dict(game_session=567, description='Wand of Heal', amount=45.89, entry_type='withdrawl')
+    result = client.post('/entry/add', data=data, follow_redirects=True)
 
     # assert
     assert b'45.89' in result.data

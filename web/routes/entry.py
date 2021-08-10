@@ -88,7 +88,7 @@ def add_transaction():
     return redirect(url_for('entry_bp.index'))
 
 
-@entry_bp.route('/entry/<id>', methods=['get', 'post'])
+@entry_bp.route('/entry/<int:id>', methods=['get', 'post'])
 @login_required
 def edit_entry(id):
     """ Handle editing an existing entry """
@@ -120,13 +120,11 @@ def edit_entry(id):
         entry = None
         mode = 'add'
     else:
-        mode = 'edit'
-        # if it's a negative number it's a withdrawl, positive is a deposit.
-        if entry.amount > 0:
-            entry_type = 'deposit'
-        else:
+        if entry.amount < 0:
             entry_type = 'withdrawl'
-        entry.amount = abs(entry.amount)
+        else:
+            entry_type = 'deposit'
+        mode = 'edit'
 
     form.process(obj=entries)
     form.process(obj=entry)

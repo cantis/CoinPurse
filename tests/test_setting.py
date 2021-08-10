@@ -74,8 +74,9 @@ def test_create_entry_save_game_session(client):
     # arrange
 
     # act
+    data = dict(game_session=2300, description='Wand of Heal', amount=10.02, entry_type='withdrawl')
     with client.application.test_request_context('/'):
-        result = client.post('/entry/add', data=dict(game_session=2300, description='Wand of Heal', amount=10.02), follow_redirects=True)
+        result = client.post('/entry/add', data=data, follow_redirects=True)
 
     # assert
         result = get_setting('game_session')
