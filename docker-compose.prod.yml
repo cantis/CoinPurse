@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:5000"
+    depends_on: 
+      - web
+
+  web:
+    build: .
+    image: coinpurse:latest
+    container_name: coinpurse
+    expose:
+      - 5000
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data
+    env_file: 
+      - ./.env
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:app
+
+
+
+    
+

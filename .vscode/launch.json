@@ -10,7 +10,20 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_DEBUG": "1"
+                "ENV": "debug"
+            },
+            "args": [
+                "run"
+            ],
+            "jinja": true
+        },
+        {
+            "name": "Flask: Prod",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "ENV": "prod"
             },
             "args": [
                 "run"

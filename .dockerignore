@@ -2,7 +2,6 @@
 .pytest_cache
 .vscode
 coverage/
-migrations/
 tests/
 venv/
 env/
@@ -11,5 +10,4 @@ env/
 docker-compose.yml
 Dockerfile
 *.md
-
-
+data/

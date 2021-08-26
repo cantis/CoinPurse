@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -5,8 +6,10 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_toastr import Toastr
 
-from config import DevConfig
+from config import DevConfig, ProdConfig
 
+# For gunicorn / nginx config
+# https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
 
 # create global objects
 bs = Bootstrap()
@@ -26,8 +29,14 @@ def create_app():
     # Create the flask application
     app = Flask(__name__)
 
-    # set the configuration
-    app.config.from_object(DevConfig())
+    # The ENV environment variable is set in the launch.json file and we default here to production.
+    environment = os.getenv('ENV', 'prod')
+
+    if environment == 'debug':
+        app.config.from_object(DevConfig())
+
+    if environment == 'prod':
+        app.config.from_object(ProdConfig())
 
     # initalize our globlal objects
     bs.init_app(app)
