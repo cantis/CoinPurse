@@ -7,7 +7,8 @@ load_dotenv(path.join(basedir, '.env'))
 
 class BaseConfig(object):
     FLASK_APP = 'wsgi.py'
-    SECRET_KEY = environ.get('SECRET_KEY')
+    # SECRET_KEY = environ.get('SECRET_KEY')
+    SECRET_KEY = 'testSecretKeyHere'
 
     STATIC_FOLDER = 'static'
     TEMPLATE_FOLDER = 'templates'
