@@ -1,5 +1,6 @@
 """ Tests related to CRUD operations for Characters """
 import pytest
+from flask_login import login_user
 from werkzeug.security import generate_password_hash
 
 from web import db, create_app
@@ -58,23 +59,35 @@ def client_loaded(app):
         db.session.add(Character(id=3, name='Fighter', is_dead=False, user_id=2))
         db.session.commit()
 
-        data = dict(email='john@smith.com', password='Monday1', remember_me=False)
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
         client_loaded.post('/login', data=data)
 
         yield client_loaded
         db.drop_all()
 
 
-def test_get_characters_for_user(client_loaded):
-    """ Get characters for logged in user """
+def test_hide_characters_for_other_users(client_loaded):
+    # arrange
+
+    # act
+    rv = client_loaded.get('/character', follow_redirects=True)
+
+    # assert
+    assert b'Paladin' in rv.data
+    assert b'Rogue' in rv.data
+    assert b'Fighter' not in rv.data
+
+
+def test_get_characters_for_currently_user(client_loaded):
+
     # arrange
 
     # act
     result = client_loaded.get('/character', follow_redirects=True)
 
     # assert
-    assert b'Fighter' in result.data
-    assert b'Rogue' not in result.data
+    assert b'Paladin' in result.data
+    assert b'Rogue' in result.data
 
 
 def test_handle_no_character(client):
