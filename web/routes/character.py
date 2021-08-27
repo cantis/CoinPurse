@@ -16,8 +16,8 @@ character_bp = Blueprint('character_bp', __name__, template_folder='templates')
 @login_required
 def character_list():
     """ charactersshow character list """
-    characters = Character.query.all()
-    characters = Character.query.filter_by(user_id=current_user.id)
+    # characters = Character.query.all()
+    characters = Character.query.filter_by(user_id=current_user.id).all()
     form = AddCharacterForm()
     form.process(obj=characters)
     form.name(class_='col-md-4')
