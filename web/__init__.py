@@ -32,7 +32,7 @@ def create_app():
     # The ENV environment variable is set in the launch.json file and we default here to production.
     environment = os.getenv('ENV', 'prod')
 
-    if environment == 'debug':
+    if environment == 'dev':
         app.config.from_object(DevConfig())
 
     if environment == 'prod':

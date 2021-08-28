@@ -27,7 +27,7 @@ def index():
         selected_name = selected_character.name
     else:
         selected_name = ''
-    characters = Character.query.all()
+    characters = Character.query.filter_by(user_id=current_user.id).all()
     game_session_list = get_game_session_list(current_id)
     filter_game_session = get_setting('filter_game_session', 'All')
 
