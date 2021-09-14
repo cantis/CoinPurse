@@ -137,7 +137,9 @@ def test_index_loads_game_session(client):
     with client:
         # arrange
         client.post('/login', data=dict(email='someone@noplace.com', password='Monday1', remember_me=False))
-        save_setting('game_session', '21999')
+        db.session.add(Entry(id=7, game_session=21999, description='Power Staff', amount=1130.00, character_id=1))
+        db.session.commit()
+        save_setting('filter_game_session', '21999', )
 
         # act
         # get the index page, does it contain the session

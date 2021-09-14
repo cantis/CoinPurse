@@ -98,6 +98,9 @@ Interestingly, no docker volume is actually created for the bind mount it just c
 ## 27 August
 Been a while but I've been updating this app again and I was able to publish it up to Heroku, yea it's not a very big deal but it's nice to have a cloud deployment up! I did find out that the settings system is just 'wrong' I didn't account for multiple users so I have to do a re-write of the settings system. This also involves re-learning how to use the flask-migrate package as I now need to make db changes on the Heroku System.
 
+## 13 September
+Finally got my setttings tests working better, the settings system is still a mess but at least I can now properly test it.
+
 
 
 
