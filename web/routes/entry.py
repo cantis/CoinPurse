@@ -63,6 +63,8 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
 
+        user = current_user
+
         # get the value of the transaction, set to negative for withdrawl (i.e. purchase)
         entry_type = request.form['entry_type']
         if entry_type == 'withdrawl':

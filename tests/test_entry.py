@@ -25,6 +25,7 @@ def empty_client(app):
         db.session.add(User(id=1, first_name='Test', last_name='User', email='someone@noplace.com', password=password))
         db.session.commit()
 
+        # Set the current user
         data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
         empty_client.post('/login', data=data)
 
@@ -47,6 +48,10 @@ def client(app):
         db.session.add(Setting(key='current_character', value='2'))
         db.session.commit()
 
+        # Set the current user
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
+        empty_client.post('/login', data=data)
+
         yield client
         db.drop_all()
 
@@ -67,6 +72,10 @@ def entry_client(app):
         # Set the current Character
         db.session.add(Setting(key='current_character', value='2'))
         db.session.commit()
+
+        # Set the current user
+        data = dict(email='someone@noplace.com', password='Monday1', remember_me=False)
+        empty_client.post('/login', data=data)
 
         # Add some entries
         db.session.add(Entry(id=1, game_session=1, description='Wand', amount=10.00, character_id=2))

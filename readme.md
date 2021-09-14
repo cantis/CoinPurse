@@ -25,14 +25,16 @@ Also got code coverage working! execute the following
 
 *Note: I have a .coverage file that limits the coverage data to the project source.*
 
-** Generage the coverage data **
-``` PS> coverage run --source=. -m pytest```
+```powershell
+# Generate the coverage data **
+PS coverage run --source=. -m pytest
 
-** Show the report (command line) **
-``` PS> coverage report ```
+# Show the report (command line) **
+PS coverage report
 
-** Generate the HTML Coverage report into **
-``` PS> coverage html ```
+# Generate the HTML Coverage report into **
+PS coverage html
+```
 
 ## 7 December
 Got the entry code and tests to work and now I'm trying to deploy it to Google Cloud Run!
