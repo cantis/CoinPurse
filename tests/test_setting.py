@@ -10,6 +10,7 @@ from web.utility.setting import get_setting, save_setting
 
 @pytest.fixture(scope='session')
 def app():
+    ''' Set test App context '''
     app = create_app()
     config = TestConfig()
     app.config.from_object(config)
@@ -18,38 +19,45 @@ def app():
 
 @pytest.fixture(scope='function')
 def client(app):
+    ''' Create test context '''
     with app.app_context():
         client = app.test_client()
-        db.create_all()
 
-        # Add Users
-        password = generate_password_hash('Monday1')
-        db.session.add(User(id=1, first_name='TestA', last_name='UserOne', email='someone@noplace.com', password=password))
-        db.session.add(User(id=2, first_name='TestB', last_name='UserTwo', email='noone@noplace.com', password=password))
-        db.session.commit()
-
-        # Add sessions
-        db.session.add(Setting(id=1, user_id=1, key='test_session', value='42'))
-        db.session.add(Setting(id=2, user_id=2, key='test_session', value='99'))
-
-        # Add some Characters
-        db.session.add(Character(id=1, user_id=1, name='Paladin', is_dead=False))
-        db.session.add(Character(id=2, user_id=1, name='Rogue', is_dead=False))
-        db.session.add(Character(id=3, user_id=2, name='Fighter', is_dead=False))
-        db.session.commit()
-
-        # Add some entries
-        db.session.add(Entry(id=1, game_session=1, description='Wand', amount=10.00, character_id=1))
-        db.session.add(Entry(id=2, game_session=1, description='Sword', amount=20.00, character_id=1))
-        db.session.add(Entry(id=3, game_session=2, description='Potion', amount=30.00, character_id=1))
-        db.session.add(Entry(id=4, game_session=1, description='Crossbow', amount=40.00, character_id=2))
-        db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=2))
-        db.session.add(Entry(id=6, game_session=2, description='Backpack', amount=60.00, character_id=2))
-        db.session.commit()
+        __init_test_db()
 
         yield client
 
         db.drop_all()
+
+
+def __init_test_db():
+    ''' Add mock db data '''
+    db.create_all()
+
+    # Add Users
+    password = generate_password_hash('Monday1')
+    db.session.add(User(id=1, first_name='TestA', last_name='UserOne', email='someone@noplace.com', password=password))
+    db.session.add(User(id=2, first_name='TestB', last_name='UserTwo', email='noone@noplace.com', password=password))
+    db.session.commit()
+
+    # Add sessions
+    db.session.add(Setting(id=1, user_id=1, key='test_session', value='42'))
+    db.session.add(Setting(id=2, user_id=2, key='test_session', value='99'))
+
+    # Add some Characters
+    db.session.add(Character(id=1, user_id=1, name='Paladin', is_dead=False))
+    db.session.add(Character(id=2, user_id=1, name='Rogue', is_dead=False))
+    db.session.add(Character(id=3, user_id=2, name='Fighter', is_dead=False))
+    db.session.commit()
+
+    # Add some entries
+    db.session.add(Entry(id=1, game_session=1, description='Wand', amount=10.00, character_id=1))
+    db.session.add(Entry(id=2, game_session=1, description='Sword', amount=20.00, character_id=1))
+    db.session.add(Entry(id=3, game_session=2, description='Potion', amount=30.00, character_id=1))
+    db.session.add(Entry(id=4, game_session=1, description='Crossbow', amount=40.00, character_id=2))
+    db.session.add(Entry(id=5, game_session=1, description='Spear', amount=50.00, character_id=2))
+    db.session.add(Entry(id=6, game_session=2, description='Backpack', amount=60.00, character_id=2))
+    db.session.commit()
 
 
 def test_get_setting_user_one(client):
@@ -79,6 +87,7 @@ def test_get_session_user_two(client):
 
 
 def test_save_setting(client):
+    ''' Confirm a setting is saved '''
     with client:
         # arrange
         client.post('/login', data=dict(email='someone@noplace.com', password='Monday1', remember_me=False))
