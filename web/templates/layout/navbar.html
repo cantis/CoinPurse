@@ -12,7 +12,7 @@
             <li {% if request.path == '/character' %} class="active" {% endif %}><a href="/character">Characters</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/Logout">Logout</a></li>
+            <li><a href="/logout">Logout</a></li>
             <li role="seperator" class="devider"></li>
             <li><a href="#">Welcome: {{ current_user.first_name }}</a></li>
         </ul>

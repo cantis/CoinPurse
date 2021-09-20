@@ -57,7 +57,6 @@ def get_current_character_id():
 def get_game_session_list(character_id, no_all=False):
     """ Return a distinct alpha list of all game sessions and a 'all' at top """
     # For Distinct https://stackoverflow.com/questions/22275412/sqlalchemy-return-all-distinct-column-values
-    # games = db.session.query(distinct(Entry.game_session)).filter_by(id=character_id).all()
     games = db.session.query(Entry.game_session.distinct()).filter_by(character_id=character_id).all()
 
     # The distinct above returns a list of tupples, we need to convert that to a strait list

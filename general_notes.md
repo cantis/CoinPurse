@@ -1,10 +1,15 @@
-## Code Coverage
+# General Notes
 
-Generage the coverage data  
-``` PS> coverage run --source=. -m pytest```
+## Code Coverage Report Generation
 
-Show the report (command line)   
-``` PS> coverage report ```
+```powershell
 
-Generate the HTML Coverage report into  
-``` PS> coverage html ```
+# Generage the coverage data
+PS coverage run --source=. -m pytest```
+
+# Show the report (command line)
+PS coverage report
+
+# Generate the HTML Coverage report into
+PS coverage html
+```

@@ -32,6 +32,7 @@ class Setting(db.Model):
     __tablename__ = 'Settings'
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('Users.id'))
     key = db.Column(db.String(), nullable=False)
     value = db.Column(db.String(), nullable=False)
 

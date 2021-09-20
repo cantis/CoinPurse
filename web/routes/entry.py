@@ -27,10 +27,10 @@ def index():
         selected_name = selected_character.name
     else:
         selected_name = ''
-    characters = Character.query.all()
+    characters = Character.query.filter_by(user_id=current_user.id).all()
+
     game_session_list = get_game_session_list(current_id)
     filter_game_session = get_setting('filter_game_session', 'All')
-
     if filter_game_session == 'All':
         entries = Entry.query.filter_by(character_id=current_id)
     else:
@@ -62,6 +62,8 @@ def add_transaction():
     """ Handle adding a new transaction """
     form = AddEntryForm()
     if form.validate_on_submit():
+
+        user = current_user
 
         # get the value of the transaction, set to negative for withdrawl (i.e. purchase)
         entry_type = request.form['entry_type']

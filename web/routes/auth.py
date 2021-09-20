@@ -16,7 +16,7 @@ from web.models import User
 auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
 
 
-@auth_bp.route('/login', methods=['GET'])
+@auth_bp.route('/login', methods=['GET']) 
 def login():
     form = LoginForm()
     return render_template('login.html', form=form)
@@ -77,7 +77,7 @@ def signup_post():
         return redirect(url_for('auth_bp.signup'))
 
 
-@auth_bp.route('/Logout', methods=['GET', 'POST'])
+@auth_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('auth_bp.login'))

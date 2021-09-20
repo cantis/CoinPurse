@@ -1,4 +1,5 @@
 from flask import session
+from flask_login import current_user
 
 from web import db
 from web.models import Setting
@@ -6,13 +7,16 @@ from web.models import Setting
 
 def get_setting(setting_name, default='none'):
 
+    # Get the current user id from the session
+    user = current_user
+
     # check if a setting exists in session already
     if session.get(setting_name):
         temp = session[setting_name]
         return temp
 
     # session doesn't have it = get it from db
-    setting = Setting.query.filter_by(key=setting_name).first()
+    setting = Setting.query.filter_by(key=setting_name, user_id=user.id).first()
 
     if setting:
         session[setting_name] = setting.value
@@ -32,6 +36,7 @@ def save_setting(setting_name, value):
         setting_exists.value = value
     else:
         new_setting = Setting(
+            user_id=current_user.id,
             key=setting_name,
             value=value
         )
