@@ -4,6 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.fields.core import FloatField, IntegerField
 from wtforms.fields.simple import HiddenField, SubmitField
+from wtforms.fields.html5 import SearchField
 from wtforms.validators import InputRequired
 
 from web import db
@@ -63,14 +64,12 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
 
-        user = current_user
-
         # get the value of the transaction, set to negative for withdrawl (i.e. purchase)
         entry_type = request.form['entry_type']
         if entry_type == 'withdrawl':
-            amount = -form.amount.data
+            amount = -float(form.amount.data)
         if entry_type == 'deposit':
-            amount = form.amount.data
+            amount = float(form.amount.data)
 
         new_entry = Entry(
             game_session=form.game_session.data,
@@ -157,8 +156,8 @@ def set_current_character():
 class AddEntryForm(FlaskForm):
     """ Add Entry Form """
     game_session = IntegerField(label='Session', validators=[InputRequired('Please provide a game session number.')])
-    description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
-    amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
+    description = SearchField(label='Description', validators=[InputRequired('Please provide a name')])
+    amount = FloatField(label='Amount', validators=[InputRequired('Please provide an amount.')])
     submit = SubmitField('Save')
 
 
@@ -166,6 +165,6 @@ class EditEntryForm(FlaskForm):
     """ Edit a transaction / entry Form """
     id = HiddenField()
     game_session = IntegerField(label='Session', validators=[InputRequired('Please provide game session number.')])
-    description = StringField(label='Description', validators=[InputRequired('Please provide a name')])
+    description = SearchField(label='Description', validators=[InputRequired('Please provide a name')])
     amount = FloatField(label='Amount', validators=[InputRequired('Please enter an amount.')])
     submit = SubmitField('Save')
