@@ -63,9 +63,9 @@ def add_transaction():
     form = AddEntryForm()
     if form.validate_on_submit():
 
-        # get the value of the transaction, set to negative for withdrawl (i.e. purchase)
+        # get the value of the transaction, set to negative for purchases.
         entry_type = request.form['entry_type']
-        if entry_type == 'withdrawl':
+        if entry_type == 'purchase':
             amount = -float(form.amount.data)
         if entry_type == 'deposit':
             amount = float(form.amount.data)
@@ -111,7 +111,7 @@ def edit_entry(id):
         amount = float(form.amount.data)
 
         entry_type = request.form['entry_type']
-        if entry_type == 'withdrawl':
+        if entry_type == 'purchase':
             amount = -amount
         entry.amount = amount
 
@@ -121,7 +121,7 @@ def edit_entry(id):
         mode = 'add'
     else:
         if entry.amount < 0:
-            entry_type = 'withdrawl'
+            entry_type = 'purchase'
         else:
             entry_type = 'deposit'
         mode = 'edit'
