@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField
 from wtforms.fields.core import FloatField, IntegerField
 from wtforms.fields.simple import HiddenField, SubmitField
 from wtforms.fields.html5 import SearchField
@@ -42,7 +41,7 @@ def index():
     mode = 'add'
     game_session = get_setting('game_session')
 
-    return render_template('index.html', mode=mode, entries=entries, form=form, game_session=game_session,
+    return render_template('entry.html', mode=mode, entries=entries, form=form, game_session=game_session,
                            characters=characters, selected_name=selected_name, balance=balance,
                            game_session_list=game_session_list, filter_game_session=filter_game_session,
                            current_user=current_user)
@@ -129,7 +128,7 @@ def edit_entry(id):
 
     form.process(obj=entries)
     form.process(obj=entry)
-    return render_template('index.html', form=form, mode=mode, entry=entry,
+    return render_template('entry.html', form=form, mode=mode, entry=entry,
                            entries=entries, characters=characters, selected_name=selected_name, balance=balance,
                            game_session_list=game_session_list, selected_game_session=selected_game_session, entry_type=entry_type)
 
