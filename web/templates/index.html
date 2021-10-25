@@ -4,6 +4,15 @@
 {% block styles %}
     {{super()}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+    <!-- Fix for the search fields, they are messed up in the bootstrap version
+    see https://stackoverflow.com/questions/20062218/how-do-i-clear-a-search-box-with-an-x-in-bootstrap-3 -->
+    <style>
+        input[type="search"]::-webkit-search-cancel-button {
+          -webkit-appearance: searchfield-cancel-button;
+        }
+    </style>
+
 {% endblock styles%}
 
 {% block content %}
@@ -33,6 +42,7 @@
                     </div>
                 </form>
             </div>
+
             <!-- Game Session Selector  -->
             <div class="col-md-4">
                 <form class="form-inline" action="/filter_game_session" method="post">
