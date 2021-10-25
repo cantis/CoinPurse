@@ -120,7 +120,7 @@ def test_create_entry_save_game_session(client):
         client.post('/login', data=dict(email='someone@noplace.com', password='Monday1', remember_me=False))
 
         # act
-        data = dict(game_session=2300, description='Wand of Heal', amount='10.02', entry_type='withdrawl')
+        data = dict(game_session=2300, description='Wand of Heal', amount='10.02', entry_type='purchase')
         result = client.post('/entry/add', data=data, follow_redirects=True)
 
         # assert

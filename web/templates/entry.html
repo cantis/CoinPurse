@@ -112,12 +112,12 @@
                 <h2>Add Entry</h2>
                 <form action="/entry/add" class="form-horizontal" method="post">
                     {{ form.hidden_tag()}}
-                    <!-- Transaction Type Radio Buttons (Withdrawl|Deposit) -->
+                    <!-- Transaction Type Radio Buttons (Purchase|Deposit) -->
                     <div class="form-group">
                         <label for="entry_type" class="col-md-3 control-label">Entry Type</label>
                         <div class="btn-group col-md-6" data-toggle="buttons">
                             <label class="btn btn-primary active">
-                                <input type="radio" name="entry_type" id="withdrawl" value='withdrawl' checked>Withdrawl
+                                <input type="radio" name="entry_type" id="purchase" value='purchase' checked>Purchase
                             </label>
                             <label class="btn btn-primary">
                                 <input type="radio" name="entry_type" id="deposit" value='deposit'> Deposit
@@ -159,13 +159,13 @@
                     <div class="form-group">
                         <label for="entry_type" class="col-md-3 control-label">Entry Type</label>
                         <div class="btn-group col-md-6" data-toggle="buttons">
-                            <label class="{{ 'btn btn-primary active' if entry_type == 'withdrawl' else 'btn btn-primary' }}" >
-                                {% if entry_type == 'withdrawl' %}
-                                    <input type="radio" name="entry_type" id="withdrawl" value="withdrawl" checked>
+                            <label class="{{ 'btn btn-primary active' if entry_type == 'purchase' else 'btn btn-primary' }}" >
+                                {% if entry_type == 'purchase' %}
+                                    <input type="radio" name="entry_type" id="purchase" value="purchase" checked>
                                 {% else %}
-                                    <input type="radio" name="entry_type" id="withdrawl" value="withdrawl">
+                                    <input type="radio" name="entry_type" id="purchase" value="purchase">
                                 {% endif %}
-                                Withdrawl
+                                purchase
                             </label>
                             <label class="{{ 'btn btn-primary active' if entry_type == 'deposit' else 'btn btn-primary' }}"} >
                                 {% if entry_type == 'deposit' %}
