@@ -3,6 +3,8 @@
 Evan Young 2020
 cantis@gmail.com
 
+This file is my notes on my progress, keeping a record of what I've done and what I'm working on.
+
 ## Overview
 Coin Purse is a *virtual wallet* for Pathfinder characters. Recording what they spend and what they spend it on and what the current balance their purse is.
 
@@ -35,6 +37,7 @@ PS coverage report
 # Generate the HTML Coverage report into **
 PS coverage html
 ```
+
 
 ## 7 December
 Got the entry code and tests to work and now I'm trying to deploy it to Google Cloud Run!
@@ -103,6 +106,9 @@ Finally got my setttings tests working better, the settings system is still a me
 
 ## 31 October
 Something wrong on the DB level, it appears to be in the production Postgres database. I've re-done the migrations but it still seems wrong.
+
+## 6 November
+Changed some documenatation and I'm fixiup that postgres error.
 
 
 

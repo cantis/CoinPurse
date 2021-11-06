@@ -32,6 +32,28 @@ PS flask db migrate -m "migration name"
 # Execute migration update:
 PS flask db upgrade
 ```
+## Note:
+!! If we create the datbase using the create_all then the migration process won't recognise the changes, the db has to be 'behind' the current state.*
 
-*Note: !! If we create the datbase using the create_all then the migration process won't recognise the changes, the db has to be 'behind' the current state.*
+## To delete all tables on a Postgres database
+*N.B. this leaves the database in place but with no tables.*
+
+```powershell
+# Open psql to edit the database
+PS psql -U postgres
+PS <enter password>
+```
+
+```postgresql
+-- In psql prompt:
+\l --list databases
+\c  <database name> -- connect to the database
+\dt --list the tables
+
+drop schema <schema name> cascade; --drop the schema
+create schema <schema name>; --create a new schema
+grant all on <schema name> to postgres; --grant all privileges to postgres
+grant all on <schema name> to public; --grant all privileges to public
+\q --quit
+```
 
