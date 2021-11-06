@@ -1,12 +1,14 @@
-# Coint Purse DB notes
+# Coin Purse DB notes
 
 ## Initialize DB object
 To create the database at the command line execute:
+*Note: this is different from the Migration based process below!
 ```powershell
-   PS python
-   >>>from web import db
-   >>>db.create_all()
-   >>>quit()
+# Create the database
+PS python
+>>>from web import db
+>>>db.create_all()
+>>>quit()
 ```
 *Note: This works if working from nothing, if you have an existing database use the mirgration proces.*
 
@@ -31,5 +33,5 @@ PS flask db migrate -m "migration name"
 PS flask db upgrade
 ```
 
-*Note: If we create the datbase using the create_all then the migration process won't recognise the changes, the db has to be 'behind' the current state.*
+*Note: !! If we create the datbase using the create_all then the migration process won't recognise the changes, the db has to be 'behind' the current state.*
 

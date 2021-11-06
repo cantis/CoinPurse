@@ -101,6 +101,10 @@ Been a while but I've been updating this app again and I was able to publish it 
 ## 13 September
 Finally got my setttings tests working better, the settings system is still a mess but at least I can now properly test it.
 
+## 31 October
+Something wrong on the DB level, it appears to be in the production Postgres database. I've re-done the migrations but it still seems wrong.
+
+
 
 
 

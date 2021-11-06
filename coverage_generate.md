@@ -1,11 +1,8 @@
-# General Notes
-
-## Code Coverage Report Generation
-
+# Coverage Report Generation
+To generate a code coverage report, run the following command:
 ```powershell
-
 # Generage the coverage data
-PS coverage run --source=. -m pytest```
+PS coverage run --source=. -m pytest
 
 # Show the report (command line)
 PS coverage report
