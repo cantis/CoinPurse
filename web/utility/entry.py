@@ -59,13 +59,6 @@ def get_game_session_list(character_id, no_all=False):
     # NOTE: Added an order by, note the \ for clean line continuation (this is up for debate)
     # SEE: https://stackoverflow.com/questions/22275412/sqlalchemy-return-all-distinct-column-values for Distinct keyword.
 
-    # SEE: https://stackoverflow.com/questions/12693089/pgerror-select-distinct-order-by-expressions-must-appear-in-select-list
-    # Interesting, the above link says that the order by must be in the select list, it isn't so it fails when we hit the lambda.
-    # games = db.session.query(Entry.game_session.distinct()) \
-    #     .filter_by(character_id=character_id) \
-    #     .order_by(Entry.game_session.asc(), Entry.id.asc()) \
-    #     .all()
-
     games = db.session.query(Entry.game_session.distinct()) \
         .filter_by(character_id=character_id) \
         .order_by(Entry.game_session.asc()) \

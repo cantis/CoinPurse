@@ -108,17 +108,6 @@ Finally got my setttings tests working better, the settings system is still a me
 Something wrong on the DB level, it appears to be in the production Postgres database. I've re-done the migrations but it still seems wrong.
 
 ## 6 November
-Changed some documenatation and I'm fixiup that postgres error.
+Changed some documenatation and I'm fixiup that postgres error. Turns out that the postgres error was a query problem. If you have a Distinct and an Order by in the same query on postgres you get an error where the DB can't figure out how to sort and be distinct at the same time IF you don't have the column you're soritng by in the distinct. I cleared that and it appears to be working now. See https://stackoverflow.com/questions/12693089/pgerror-select-distinct-order-by-expressions-must-appear-in-select-list
 
-
-
-
-
-
-
-
-
-
-
-
-
+I also fixed up some documentation today, re-deployed to Heroku and got it updated again and I'm cleaning up some of the game session code. Set the master branch to only allow PR commits directly. All of the tests are passing. After the clean up I'm going to set this asside for a bit and switch to another project.
